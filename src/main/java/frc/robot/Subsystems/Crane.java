@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CraneConstants;
 
@@ -24,12 +25,55 @@ public class Crane extends SubsystemBase {
   private final SparkMax GrabberLMax = new SparkMax(CraneConstants.GRABBER_LEFT_ID,MotorType.kBrushless);
   private final SparkMax GrabberTwistMax = new SparkMax(CraneConstants.GRABBER_TWIST_ID, MotorType.kBrushless);
 
+  private final DigitalInput ElevatorTop = new DigitalInput(CraneConstants.LIMIT_TOP);
+  private final DigitalInput ElevatorBottom = new DigitalInput(CraneConstants.LIMIT_BOTTOM);
+  private final DigitalInput Elbow = new DigitalInput(CraneConstants.LIMIT_ELBOW);
+
   /** Creates a new Crane. */
   public Crane() {
-    SparkMaxConfig RightMax = new SparkMaxConfig();
-      RightMax.inverted(true);
-      ElevatorRMax.configure(RightMax, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      GrabberRMax.configure(RightMax, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Sets configuration for right elevator sparkmax
+    SparkMaxConfig RightElevatorConfig = new SparkMaxConfig();
+    RightElevatorConfig.inverted(true);
+    RightElevatorConfig.follow(ElevatorLMax);
+    ElevatorRMax.configure(RightElevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    // Sets configuration for right grabber sparkmax
+    SparkMaxConfig RightGrabberConfig = new SparkMaxConfig();
+    RightGrabberConfig.inverted(true);
+    RightGrabberConfig.follow(GrabberLMax);
+    GrabberRMax.configure(RightGrabberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+  }
+
+
+  public void CraneConverter(double ElevatorSpeed, double ArmSpeed, double TwistSpeed){
+    // Elevator speed control
+    if (ElevatorTop.get() && ElevatorSpeed > 0) {
+      ElevatorLMax.set(0);
+    } else if (ElevatorBottom.get() && ElevatorSpeed < 0){
+      ElevatorLMax.set(0);
+    } else {
+      ElevatorLMax.set(ElevatorSpeed);
+    }
+
+    // Arm speed control
+    if (Elbow.get() && ArmSpeed > 0){
+      ArmMax.set(0);
+    } else if (ArmMax.getAbsoluteEncoder().getPosition() > 270 && ArmSpeed < 0){
+      ArmMax.set(0);
+    } else {
+      ArmMax.set(ArmSpeed);
+    }
+    
+    // Twister speed control
+    if (GrabberTwistMax.getAbsoluteEncoder().getPosition() > 90 && TwistSpeed > 0){
+      GrabberTwistMax.set(0);
+    } else if (GrabberTwistMax.getAbsoluteEncoder().getPosition() > 270 && TwistSpeed < 0){
+      GrabberTwistMax.set(0);
+    } else{
+      GrabberTwistMax.set(TwistSpeed);
+    }
+
   }
 
   @Override

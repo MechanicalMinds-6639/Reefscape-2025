@@ -17,12 +17,17 @@ public class Constants {
     }
 
     public static final class CraneConstants {
+        // TODO Set IDs
         public static final int ARM_MOTOR_ID = 0;
         public static final int ELEVATOR_RIGHT_ID = 0;
         public static final int ELEVATOR_LEFT_ID = 0;
         public static final int GRABBER_RIGHT_ID = 0;
         public static final int GRABBER_LEFT_ID = 0;
         public static final int GRABBER_TWIST_ID = 0;
+
+        public static final int LIMIT_TOP = 0;
+        public static final int LIMIT_BOTTOM = 0;
+        public static final int LIMIT_ELBOW = 0;
 
     }
 }
