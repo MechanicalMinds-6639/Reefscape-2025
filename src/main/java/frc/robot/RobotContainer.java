@@ -19,6 +19,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
+  private final CommandXboxController driverController2 = new CommandXboxController(Constants.Operator.DRIVER2);
   private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),

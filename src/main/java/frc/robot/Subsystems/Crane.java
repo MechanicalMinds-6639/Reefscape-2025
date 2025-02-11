@@ -4,8 +4,6 @@
 
 package frc.robot.Subsystems;
 
-import java.io.ObjectInputFilter.Config;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -21,8 +19,8 @@ public class Crane extends SubsystemBase {
   private final SparkMax ArmMax = new SparkMax(CraneConstants.ARM_MOTOR_ID, MotorType.kBrushless);
   private final SparkMax ElevatorRMax = new SparkMax(CraneConstants.ELEVATOR_RIGHT_ID, MotorType.kBrushless);
   private final SparkMax ElevatorLMax = new SparkMax(CraneConstants.ELEVATOR_LEFT_ID, MotorType.kBrushless);
-  private final SparkMax GrabberRMax = new SparkMax(CraneConstants.GRABBER_RIGHT_ID, MotorType.kBrushless);
-  private final SparkMax GrabberLMax = new SparkMax(CraneConstants.GRABBER_LEFT_ID,MotorType.kBrushless);
+  //private final SparkMax GrabberRMax = new SparkMax(CraneConstants.GRABBER_RIGHT_ID, MotorType.kBrushless);
+  private final SparkMax GrabberMax = new SparkMax(CraneConstants.GRABBER_LEFT_ID,MotorType.kBrushless);
   private final SparkMax GrabberTwistMax = new SparkMax(CraneConstants.GRABBER_TWIST_ID, MotorType.kBrushless);
 
   private final DigitalInput ElevatorTop = new DigitalInput(CraneConstants.LIMIT_TOP);
@@ -36,24 +34,17 @@ public class Crane extends SubsystemBase {
     RightElevatorConfig.inverted(true);
     RightElevatorConfig.follow(ElevatorLMax);
     ElevatorRMax.configure(RightElevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // Sets configuration for right grabber sparkmax
-    SparkMaxConfig RightGrabberConfig = new SparkMaxConfig();
-    RightGrabberConfig.inverted(true);
-    RightGrabberConfig.follow(GrabberLMax);
-    GrabberRMax.configure(RightGrabberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
   }
 
 
-  public void CraneConverter(double ElevatorSpeed, double ArmSpeed, double TwistSpeed){
+  public void CraneConverter(double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed){
     // Elevator speed control
     if (ElevatorTop.get() && ElevatorSpeed > 0) {
       ElevatorLMax.set(0);
     } else if (ElevatorBottom.get() && ElevatorSpeed < 0){
       ElevatorLMax.set(0);
     } else {
-      ElevatorLMax.set(ElevatorSpeed);
+      ElevatorLMax.set(ElevatorSpeed * CraneConstants.ELEVATOR_MULTIPLIER);
     }
 
     // Arm speed control
@@ -62,17 +53,15 @@ public class Crane extends SubsystemBase {
     } else if (ArmMax.getAbsoluteEncoder().getPosition() > 270 && ArmSpeed < 0){
       ArmMax.set(0);
     } else {
-      ArmMax.set(ArmSpeed);
+      ArmMax.set(ArmSpeed * CraneConstants.ARM_MULTIPLIER);
     }
     
     // Twister speed control
-    if (GrabberTwistMax.getAbsoluteEncoder().getPosition() > 90 && TwistSpeed > 0){
-      GrabberTwistMax.set(0);
-    } else if (GrabberTwistMax.getAbsoluteEncoder().getPosition() > 270 && TwistSpeed < 0){
-      GrabberTwistMax.set(0);
-    } else{
-      GrabberTwistMax.set(TwistSpeed);
-    }
+    GrabberTwistMax.set(TwistSpeed * CraneConstants.TWIST_MULTIPLIER);
+
+    // Grabber speed control
+    GrabberMax.set(GrabberSpeed * CraneConstants.GRABBER_MULTIPLIER);
+    
 
   }
 

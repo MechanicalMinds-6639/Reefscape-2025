@@ -13,6 +13,7 @@ public class Constants {
 
     public static final class Operator {
         public static final int DRIVER = 0;
+        public static final int DRIVER2 = 1;
         public static final double DEADBAND = 0.1;
     }
 
@@ -28,6 +29,13 @@ public class Constants {
         public static final int LIMIT_TOP = 0;
         public static final int LIMIT_BOTTOM = 0;
         public static final int LIMIT_ELBOW = 0;
+
+        // TODO set multipliers
+        // Speed Multipliers
+        public static final double TWIST_MULTIPLIER = 0.25;
+        public static final double ARM_MULTIPLIER = 0.25;
+        public static final double ELEVATOR_MULTIPLIER = 0.25;
+        public static final double GRABBER_MULTIPLIER = 0.25;
 
     }
 }
