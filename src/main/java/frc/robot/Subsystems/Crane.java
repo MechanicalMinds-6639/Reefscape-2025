@@ -11,7 +11,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
 
 public class Crane extends SubsystemBase {
@@ -36,33 +38,41 @@ public class Crane extends SubsystemBase {
     ElevatorRMax.configure(RightElevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
+  /*
+   * Command to control the crane motion
+   */
+  public Command CraneConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
 
-  public void CraneConverter(double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed){
-    // Elevator speed control
-    if (ElevatorTop.get() && ElevatorSpeed > 0) {
-      ElevatorLMax.set(0);
-    } else if (ElevatorBottom.get() && ElevatorSpeed < 0){
-      ElevatorLMax.set(0);
-    } else {
-      ElevatorLMax.set(ElevatorSpeed * CraneConstants.ELEVATOR_MULTIPLIER);
-    }
+    return run(() -> {
 
-    // Arm speed control
-    if (Elbow.get() && ArmSpeed > 0){
-      ArmMax.set(0);
-    } else if (ArmMax.getAbsoluteEncoder().getPosition() > 270 && ArmSpeed < 0){
-      ArmMax.set(0);
-    } else {
-      ArmMax.set(ArmSpeed * CraneConstants.ARM_MULTIPLIER);
-    }
+
+      double ElevatorSpeed = CraneController.getLeftY();
+      double ArmSpeed = CraneController.getRightY();
+      double TwistSpeed = CraneController.getRightX();
+
+
+      // Elevator speed control
+      if (ElevatorTop.get() && ElevatorSpeed > 0) {
+        ElevatorLMax.set(0);
+      } else if (ElevatorBottom.get() && ElevatorSpeed < 0){
+        ElevatorLMax.set(0);
+      } else {
+        ElevatorLMax.set(ElevatorSpeed * CraneConstants.ELEVATOR_MULTIPLIER);
+      }
+
+      // Arm speed control
+      if (Elbow.get() && ArmSpeed > 0){
+        ArmMax.set(0);
+      } else if (ArmMax.getAbsoluteEncoder().getPosition() > 270 && ArmSpeed < 0){
+        ArmMax.set(0);
+      } else {
+        ArmMax.set(ArmSpeed * CraneConstants.ARM_MULTIPLIER);
+      }
+      
+      // Twister speed control
+      GrabberTwistMax.set(TwistSpeed * CraneConstants.TWIST_MULTIPLIER);
+    });
     
-    // Twister speed control
-    GrabberTwistMax.set(TwistSpeed * CraneConstants.TWIST_MULTIPLIER);
-
-    // Grabber speed control
-    GrabberMax.set(GrabberSpeed * CraneConstants.GRABBER_MULTIPLIER);
-    
-
   }
 
   @Override
