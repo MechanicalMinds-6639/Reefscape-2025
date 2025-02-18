@@ -1,5 +1,8 @@
+
+
 // Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
+// Open Source Software; you ?
+// can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
@@ -13,6 +16,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Subsystems.PhotonVisionInterface;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -20,6 +24,7 @@ public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
   private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+  //private final PhotonVisionInterface photonVision = new PhotonVisionInterface();
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
       () -> driverController.getLeftY() * -1,
@@ -58,6 +63,7 @@ public class RobotContainer {
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
+    //photonVision.setDefaultCommand(photonVision.testCommand());
   }
 
   public Command getAutonomousCommand() {
