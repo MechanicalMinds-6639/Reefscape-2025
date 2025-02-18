@@ -4,32 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-
-     // Constants such as camera and target height stored. Change per robot and goal!
-     final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
-     final double TARGET_HEIGHT_METERS = Units.feetToMeters(5);
-     // Angle between horizontal and the camera.
-     final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
-  
-     // How far from the target we want to be
-     final double GOAL_RANGE_METERS = Units.feetToMeters(3);
-  
-     // Change this to match the name of your camera
-     PhotonCamera camera = new PhotonCamera("VisionCamera");
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -38,15 +21,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    var result = camera.getLatestResult();
-    int ID = 0;
-    try {
-      ID = result.getBestTarget().fiducialId;
-    } catch (Exception e) {
-      ID = 99;
-    }   
-
-    SmartDashboard.putNumber("FiducialID", ID);
   }
 
   @Override
