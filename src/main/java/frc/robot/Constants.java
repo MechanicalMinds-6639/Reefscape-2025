@@ -30,4 +30,11 @@ public class Constants {
         public static final int LIMIT_ELBOW = 0;
 
     }
+
+    public static final class ClimbConstants {
+        // TODO Set IDS
+        public static final int CLIMB_MOTOR_ID = 0;
+        public static final double CLIMBER_SPEED = 0.1;
+
+    }
 }
