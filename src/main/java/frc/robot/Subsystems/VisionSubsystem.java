@@ -6,14 +6,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class PhotonVisionInterface extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase {
 
 PhotonCamera camera = new PhotonCamera("VisionCamera");
-//PhotonPipelineResult result = camera.getLatestResult();
-//String test = "Test";
 
-public Command testCommand() {
+
+//Gets ID of best target Apriltag and displays 
+public Command getFiducialID() {
     return run(() -> {
+        //System.out.println("Command Running");
         int ID = 0;
         var result = camera.getLatestResult();
         try {
@@ -23,6 +24,8 @@ public Command testCommand() {
         }  
         SmartDashboard.putNumber("FiducialID", ID);
     });
+
+
 }
 
 }
