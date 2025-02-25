@@ -9,6 +9,12 @@ import java.util.Arrays;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -50,6 +56,8 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.setCosineCompensator(false);
     swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
     swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
+
+    setupPathPlanner();
   }
 
   @Override
@@ -59,6 +67,61 @@ public class SwerveSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Front right encoder", swerveDrive.getModules()[1].getAbsolutePosition());
     // SmartDashboard.putNumber("Back left encoder", swerveDrive.getModules()[2].getAbsolutePosition());
     // SmartDashboard.putNumber("Back right encoder", swerveDrive.getModules()[3].getAbsolutePosition());
+  }
+
+  public void setupPathPlanner() {
+
+    RobotConfig config;
+
+    try {
+
+      config = RobotConfig.fromGUISettings(); //TODO maybe make this a constant built manually
+
+      final boolean enableFeedForward = true;
+
+      AutoBuilder.configure(
+
+        this::getPose,
+        this::resetOdometry,
+        this::getRobotVelocity,
+
+        (speedsRobotRelative, moduleFeedForwards) -> {
+          if(enableFeedForward) {
+            swerveDrive.drive(
+              speedsRobotRelative,
+              swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
+              moduleFeedForwards.linearForces()
+                            );
+          } else {
+            swerveDrive.setChassisSpeeds(speedsRobotRelative);
+          }
+        },
+
+        new PPHolonomicDriveController( 
+          //TODO Set proper pid values maybe
+          new PIDConstants(5.0, 0.0, 0.0),
+          //translation
+          new PIDConstants(5.0, 0.0, 0.0)
+          //rotation
+        ),
+        config,
+
+        () -> {
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this
+
+      );
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    PathfindingCommand.warmupCommand().schedule();
   }
 
   public Command sysIdDriveMotorCommand() {
@@ -168,5 +231,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveDrive getSwerveDrive() {
     return swerveDrive;
+  }
+
+  public ChassisSpeeds getRobotVelocity() {
+    return swerveDrive.getRobotVelocity();
   }
 }
