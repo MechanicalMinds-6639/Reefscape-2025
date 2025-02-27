@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Subsystems.Crane;
+import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -22,7 +22,7 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
   private final CommandXboxController driverController2 = new CommandXboxController(Constants.Operator.DRIVER2);
   private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
-  private final Crane crane = new Crane();
+  private final Elevator elevator = new Elevator();
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
       () -> driverController.getLeftY() * -1,
@@ -59,7 +59,7 @@ public class RobotContainer {
     }
 
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
-    crane.setDefaultCommand(crane.CraneConverterCommand(driverController2));
+    elevator.setDefaultCommand(elevator.ElevatorConverterCommand(driverController2));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
   }
