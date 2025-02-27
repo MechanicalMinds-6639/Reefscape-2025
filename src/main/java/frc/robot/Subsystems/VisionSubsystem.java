@@ -26,11 +26,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
-PhotonCamera camera = new PhotonCamera("VisionCamera");
+    PhotonCamera camera = new PhotonCamera("VisionCamera");
+
+    PhotonTrackedTarget target = new PhotonTrackedTarget();
+
+    Rotation3d pRotation3d = new Rotation3d();
+
+    Transform3d pCameraToRobot = new Transform3d(0.0, 0.0, 0.31, pRotation3d);
+    
+    Pose3d robotPoseEstimate = new Pose3d();
 
 // The field from AprilTagFields will be different depending on the game.
 AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Yawwwwl", target.getYaw());
+        SmartDashboard.putNumber("Pitch", target.getPitch());
+        SmartDashboard.putNumber("Area", target.getArea());
+        SmartDashboard.putNumber("Skew", target.getSkew());
+        SmartDashboard.putNumber("FiducialID", target.getFiducialId());
+        SmartDashboard.putNumber("PoseX", robotPoseEstimate.getX());
+        SmartDashboard.putNumber("PoseY", robotPoseEstimate.getY());
+    }
 
 //Gets ID of best target Apriltag and displays 
 public Command getFiducialID() {
@@ -43,27 +61,31 @@ public Command getFiducialID() {
         } catch (Exception e) {
             ID = -1;
         }  
-        SmartDashboard.putNumber("FiducialID", ID);
+       
     });
 
 }
 
-public Command getTargetInformation() {
+
+
+public Command getAllUnreadResults() {
     return run(() -> {
         // Get information from target.
-        PhotonTrackedTarget target = camera.getAllUnreadResults().get(0).getBestTarget();
-        double yaw = target.getYaw();
-        double pitch = target.getPitch();
-        double area = target.getArea();
-        double skew = target.getSkew();
+        target = camera.getAllUnreadResults().get(0).getBestTarget();
+        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+            robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
+         }
+    });}
 
-        SmartDashboard.putNumber("Yaw", yaw);
-        SmartDashboard.putNumber("Pitch", pitch);
-        SmartDashboard.putNumber("Area", area);
-        SmartDashboard.putNumber("Skew", skew);
-
-    });
-}
+ 
+public Command getPose3d() {
+    return run(() -> {
+        // Calculate robot's field relative pose
+    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+       robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
+    }
+    
+    });}
 
 
 }
