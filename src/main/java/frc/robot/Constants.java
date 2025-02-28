@@ -27,9 +27,6 @@ public class Constants {
         public static final int ARM_MOTOR_ID = 0;
         public static final int ELEVATOR_RIGHT_ID = 0;
         public static final int ELEVATOR_LEFT_ID = 0;
-        public static final int GRABBER_RIGHT_ID = 0;
-        public static final int GRABBER_LEFT_ID = 0;
-        public static final int GRABBER_TWIST_ID = 0;
 
         public static final int LIMIT_TOP = 0;
         public static final int LIMIT_BOTTOM = 0;
@@ -37,10 +34,9 @@ public class Constants {
 
         // TODO set multipliers
         // Speed Multipliers
-        public static final double TWIST_MULTIPLIER = 0.25;
         public static final double ARM_MULTIPLIER = 0.25;
         public static final double ELEVATOR_MULTIPLIER = 0.25;
-        public static final double GRABBER_MULTIPLIER = 0.25;
+        
 
         // TODO set speed
         public static final double ELEVATOR_MAX_SPEED = 0.2;
@@ -76,5 +72,16 @@ public class Constants {
         public static final double ARM_REDUCTION = 20;
         public static final double ARM_DEFAULT_TOLERANCE = 1;
 
+    }
+
+    public static final class GrabberConstants {
+        public static final int WRIST_CURRENT_LIMIT = 40;
+        public static final double WRIST_CLOSED_LOOP_RAMP_RATE = 0.25;
+        public static final int GRABBER_RIGHT_ID = 0;
+        public static final int GRABBER_LEFT_ID = 0;
+        public static final int GRABBER_TWIST_ID = 0;
+        public static final double GRABBER_MULTIPLIER = 0.25;
+        public static final double TWIST_MULTIPLIER = 0.25;
+        public static final double GRABBER_SPEED = 0.1;
     }
 }
