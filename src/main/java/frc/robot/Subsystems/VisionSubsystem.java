@@ -41,40 +41,112 @@ AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTag
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Yawwwwl", target.getYaw());
-        SmartDashboard.putNumber("Pitch", target.getPitch());
-        SmartDashboard.putNumber("Area", target.getArea());
-        SmartDashboard.putNumber("Skew", target.getSkew());
-        SmartDashboard.putNumber("FiducialID", target.getFiducialId());
-        SmartDashboard.putNumber("PoseX", robotPoseEstimate.getX());
-        SmartDashboard.putNumber("PoseY", robotPoseEstimate.getY());
+        publishYaw();
+        publishFiducialID();
+        publishPitch();
+        publishArea();
+        publishSkew();
+        publishPoseX();
+        publishPoseY();
     }
 
-//Gets ID of best target Apriltag and displays 
-public Command getFiducialID() {
-    return run(() -> {
-        //System.out.println("Command Running");
-        int ID = 0;
-        var result = camera.getLatestResult();
-        try {
-            ID = result.getBestTarget().fiducialId;
-        } catch (Exception e) {
-            ID = -1;
-        }  
-       
-    });
-
+    
+public double yawToTarget(){
+    try {
+        return target.getYaw();
+    } catch (Exception e) {
+        return 0;
+    }  
 }
 
 
+//Gets ID of best target Apriltag and displays
+public void publishFiducialID() {
+    double FiducialID = 0;
+    try {
+        FiducialID = target.getFiducialId();
+    } catch (Exception e) {
+        FiducialID = -1;
+    }  
+    SmartDashboard.putNumber("FiducialID", FiducialID);
+}
+//Gets Yaw of best target Apriltag and displays
+public void publishYaw() {
+    double yaw = 0;
+    try {
+        yaw = target.getYaw();
+    } catch (Exception e) {
+        yaw = -1;
+    }  
+    SmartDashboard.putNumber("Yawwwwl", yaw);
+}
+
+//Gets Pitch of best target Apriltag and displays
+public void publishPitch() {
+    double pitch = 0;
+    try {
+        pitch = target.getPitch();
+    } catch (Exception e) {
+        pitch = -1;
+    }  
+     SmartDashboard.putNumber("Pitch", pitch);
+}
+
+//Gets Area of best target Apriltag and displays
+public void publishArea() {
+    double area = 0;
+    try {
+        area = target.getArea();
+    } catch (Exception e) {
+        area = -1;
+    }  
+     SmartDashboard.putNumber("Area", area);
+}
+
+//Gets Skew of best target Apriltag and displays
+public void publishSkew() {
+    double skew = 0;
+    try {
+        skew = target.getSkew();
+    } catch (Exception e) {
+        skew = -1;
+    }  
+    SmartDashboard.putNumber("Skew", skew);
+}
+
+//Gets PoseX of best target Apriltag and displays
+public void publishPoseX() {
+    double poseX;
+    try {
+        poseX = robotPoseEstimate.getX();
+    } catch (Exception e) {
+        poseX = -1;
+    }  
+    SmartDashboard.putNumber("PoseX", poseX);
+}
+
+//Gets PoseY of best target Apriltag and displays
+public void publishPoseY() {
+    double poseY = 0;
+    try {
+        poseY = robotPoseEstimate.getY();
+    } catch (Exception e) {
+        poseY = -1;
+    }  
+    SmartDashboard.putNumber("PoseY", poseY);
+}
 
 public Command getAllUnreadResults() {
     return run(() -> {
         // Get information from target.
-        target = camera.getAllUnreadResults().get(0).getBestTarget();
-        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-            robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
-         }
+        try {
+            target = camera.getAllUnreadResults().get(0).getBestTarget();
+            if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+                robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
+             }
+        } catch (Exception e) {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
+        }  
     });}
 
  
@@ -86,6 +158,10 @@ public Command getPose3d() {
     }
     
     });}
+
+
+
+
 
 
 }

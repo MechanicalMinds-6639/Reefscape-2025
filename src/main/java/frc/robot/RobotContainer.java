@@ -65,7 +65,6 @@ public class RobotContainer {
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
     photonVision.setDefaultCommand(photonVision.getAllUnreadResults());
-    //photonVision.setDefaultCommand(photonVision.getTargetInformation());
   }
 
   public Command getAutonomousCommand() {
