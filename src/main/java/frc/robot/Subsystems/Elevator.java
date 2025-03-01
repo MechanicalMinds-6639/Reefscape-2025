@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
+import frc.robot.Constants.Operator;
 import edu. wpi. first. math. trajectory. TrapezoidProfile.Constraints;
 
 public class Elevator extends SubsystemBase {
@@ -46,7 +47,7 @@ public class Elevator extends SubsystemBase {
             CraneConstants.ELEVATOR_KG,
             CraneConstants.ELEVATOR_KV,
             CraneConstants.ELEVATOR_KA);
-
+    private double SetPointHeight = 0.0;
 
   /** Creates a new Crane. */
   public Elevator() {
@@ -86,6 +87,32 @@ public class Elevator extends SubsystemBase {
 
     });
   }
+
+  
+   public Command RunElevator (CommandXboxController HeightController){
+      return run (() -> {
+
+        //Sets elevator encoder to 0 when bottom limit switch is hit
+        if (ElevatorBottom.get()){
+          ElevatorEncoder.setPosition(0);
+        }
+
+        // Set point controls for a, y, left stick, and hitting top limit switch
+        if (HeightController.a().getAsBoolean()){
+          SetPointHeight = 0.25;
+        } else if (HeightController.y().getAsBoolean()) {
+          SetPointHeight = 0.40;
+        } else if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
+          SetPointHeight = SetPointHeight + HeightController.getLeftY() * CraneConstants.SET_POINT_MULTIPLIER;
+        } else if (ElevatorTop.get()){
+          SetPointHeight = SetPointHeight - 0.01;
+        }
+
+        setElevatorHeight(SetPointHeight);
+        
+      });
+
+   }
 
 
   
