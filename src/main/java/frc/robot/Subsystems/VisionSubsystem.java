@@ -40,20 +40,20 @@ public class VisionSubsystem extends SubsystemBase {
 
 // The field from AprilTagFields will be different depending on the game.
  public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    /* 
+    
     @Override
     public void periodic(){
         getCameraResult();
         getTarget();
-        publishYaw();
         publishFiducialID();
-        publishPitch();
-        publishArea();
-        publishSkew();
-        publishPoseX();
-        publishPoseY();        
+        //publishYaw();
+        //publishPitch();
+        //publishArea();
+        //publishSkew();
+        //publishPoseX();
+        //publishPoseY();        
     }
-*/
+
 private void getCameraResult() {
     try {
         camResult = camera.getAllUnreadResults().get(0);
