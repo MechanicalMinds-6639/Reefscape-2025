@@ -13,13 +13,22 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Subsystems.Arm;
+import frc.robot.Subsystems.ElevatorSubsystem;
+import frc.robot.Subsystems.Grabber;
+import frc.robot.Subsystems.Wrist;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
+  private final CommandXboxController copilotController = new CommandXboxController(Constants.Operator.COPILOT);
   private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final Wrist KCCWrist = new Wrist();
+  private final Grabber KCCGrabber = new Grabber();
+  private final Arm arm = new Arm();
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
       () -> driverController.getLeftY() * -1,
@@ -56,8 +65,14 @@ public class RobotContainer {
     }
 
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
+    elevator.setDefaultCommand(elevator.ElevatorConverterCommand(copilotController));
+    KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
+    //driverController.y().whileTrue(elevator.setElevatorHeight(.4)).onFalse(elevator.stop());
+    arm.setDefaultCommand(arm.ArmConverterCommand(copilotController));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
+    copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
+    copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
   }
 
   public Command getAutonomousCommand() {
