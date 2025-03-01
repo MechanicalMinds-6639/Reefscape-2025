@@ -6,14 +6,18 @@ package frc.robot.Subsystems.SwerveDrive;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -168,5 +172,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveDrive getSwerveDrive() {
     return swerveDrive;
+  }
+
+   public Command aimAtTarget(double turnAngle)
+  {
+    return run(() -> {
+      Translation2d t = new Translation2d(0,0);
+      swerveDrive.drive(t, turnAngle, true, false);
+      //drive(swerveDrive.(0, 0, Rotation2d.fromDegrees(turnAngle)));
+    });
   }
 }

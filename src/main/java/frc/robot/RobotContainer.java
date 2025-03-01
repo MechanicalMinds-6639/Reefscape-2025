@@ -64,7 +64,9 @@ public class RobotContainer {
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
-    photonVision.setDefaultCommand(photonVision.getAllUnreadResults());
+    //driverController.y().onTrue((driveBase.aimAtTarget(photonVision.yawToTarget())));
+
+    //photonVision.setDefaultCommand(photonVision.getAllUnreadResults());
   }
 
   public Command getAutonomousCommand() {

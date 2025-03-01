@@ -36,21 +36,43 @@ public class VisionSubsystem extends SubsystemBase {
     
     Pose3d robotPoseEstimate = new Pose3d();
 
-// The field from AprilTagFields will be different depending on the game.
-AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    PhotonPipelineResult camResult = new PhotonPipelineResult();
 
+// The field from AprilTagFields will be different depending on the game.
+ public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    /* 
     @Override
     public void periodic(){
+        getCameraResult();
+        getTarget();
         publishYaw();
         publishFiducialID();
         publishPitch();
         publishArea();
         publishSkew();
         publishPoseX();
-        publishPoseY();
+        publishPoseY();        
     }
+*/
+private void getCameraResult() {
+    try {
+        camResult = camera.getAllUnreadResults().get(0);
+    } catch (Exception e){
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");  
+    }
+}  
+ 
+public boolean hasTarget() {
+    // Check if the latest result has any targets.
+    return camResult.hasTargets();    
+}
 
-    
+private void getTarget() {
+    if (hasTarget()) {
+        target = camResult.getBestTarget();
+    }
+}
+
 public double yawToTarget(){
     try {
         return target.getYaw();
@@ -58,6 +80,9 @@ public double yawToTarget(){
         return 0;
     }  
 }
+
+
+
 
 
 //Gets ID of best target Apriltag and displays
@@ -135,6 +160,8 @@ public void publishPoseY() {
     }  
     SmartDashboard.putNumber("PoseY", poseY);
 }
+
+
 
 public Command getAllUnreadResults() {
     return run(() -> {
