@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,13 +46,15 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic(){
         getCameraResult();
         getTarget();
+        getPose3d();
         publishFiducialID();
-        //publishYaw();
-        //publishPitch();
-        //publishArea();
-        //publishSkew();
-        //publishPoseX();
-        //publishPoseY();        
+        publishYaw();
+        publishPitch();
+        publishArea();
+        publishSkew();
+        publishPoseX();
+        publishPoseY();
+        SmartDashboard.putBoolean("hasTarget", hasTarget());
     }
 
 private void getCameraResult() {
@@ -67,6 +70,8 @@ public boolean hasTarget() {
     return camResult.hasTargets();    
 }
 
+
+
 private void getTarget() {
     if (hasTarget()) {
         target = camResult.getBestTarget();
@@ -80,8 +85,6 @@ public double yawToTarget(){
         return 0;
     }  
 }
-
-
 
 
 
@@ -141,7 +144,7 @@ public void publishSkew() {
 
 //Gets PoseX of best target Apriltag and displays
 public void publishPoseX() {
-    double poseX;
+    double poseX = 0;
     try {
         poseX = robotPoseEstimate.getX();
     } catch (Exception e) {
@@ -162,7 +165,7 @@ public void publishPoseY() {
 }
 
 
-
+ /* 
 public Command getAllUnreadResults() {
     return run(() -> {
         // Get information from target.
@@ -175,16 +178,16 @@ public Command getAllUnreadResults() {
             System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
         }  
     });}
+*/
 
  
-public Command getPose3d() {
-    return run(() -> {
+private void getPose3d() {
         // Calculate robot's field relative pose
     if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
        robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
     }
     
-    });}
+}
 
 
 
