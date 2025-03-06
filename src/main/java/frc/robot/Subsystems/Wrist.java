@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.CraneConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.Operator;
 
@@ -46,7 +47,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getAngleInDegrees(){
-    return (WristEncoder.getPosition()/10.0*360.0)%360.0;
+    return Math.abs((WristEncoder.getPosition()/10.0*360.0)%360.0);
   }
   
   public Command setWristAngle(double angle)
@@ -60,21 +61,41 @@ public class Wrist extends SubsystemBase {
   public Command GrabberConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
 
     return run(() -> {
-      System.out.println(getAngleInDegrees());
+      //System.out.println(getAngleInDegrees());
       if (CraneController.start().getAsBoolean()){
         setZeroReferncePoint();
       }
       
-      double TwistSpeed = CraneController.getRightX();
-      
+      //double TwistSpeed = CraneController.getRightX();
+      //GrabberTwistMax.set(TwistSpeed * GrabberConstants.TWIST_MULTIPLIER);
+      //TODO Check which bumper needs negative twist restraint
       // Twister speed control
-      if (Math.abs(TwistSpeed) < Operator.DEADBAND) {
-        GrabberTwistMax.set(0.0);
-      } else {
-        GrabberTwistMax.set(TwistSpeed * GrabberConstants.TWIST_MULTIPLIER);
+      
+      if (CraneController.getLeftTriggerAxis() > 0.5) {
+        GrabberTwistMax.set(-GrabberConstants.TWIST_MULTIPLIER);
+      } else if (CraneController.getRightTriggerAxis() > 0.5) {
+        GrabberTwistMax.set(GrabberConstants.TWIST_MULTIPLIER);
       }
+      else if (CraneController.leftBumper().getAsBoolean()) {
+        GrabberTwistMax.set(-GrabberConstants.TWIST_RESTRAINT);
+      } else if (CraneController.rightBumper().getAsBoolean()) {
+        GrabberTwistMax.set(GrabberConstants.TWIST_RESTRAINT);
+      } else {
+        GrabberTwistMax.set(0.0);
+      }
+        
     });
     
+  }
+
+  public Command autoWristCommand(double setPointDegrees) {
+    return run(() -> {
+      if(getAngleInDegrees() > setPointDegrees - 5 && getAngleInDegrees() < setPointDegrees + 5) {
+        GrabberTwistMax.set(GrabberConstants.WRIST_AUTO_SPEED);
+      } else {
+        GrabberTwistMax.set(0.0);
+      }
+    }); 
   }
 
   

@@ -38,6 +38,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final DigitalInput ElevatorTop = new DigitalInput(CraneConstants.LIMIT_TOP);
   private final DigitalInput ElevatorBottom = new DigitalInput(CraneConstants.LIMIT_BOTTOM);
 
+  private double SetPointHeight = 0.0;
+
   //PID Controllers
    private final ProfiledPIDController ElevatorController = new ProfiledPIDController(CraneConstants.ELEVATOR_KP,
             CraneConstants.ELEVATOR_KI,
@@ -93,6 +95,32 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     });
   }
+
+  public Command RunElevator (CommandXboxController HeightController){
+    return run (() -> {
+
+      //Sets elevator encoder to 0 when bottom limit switch is hit
+      if (ElevatorBottom.get()){
+        ElevatorEncoder.setPosition(0);
+      }
+
+      // Set point controls for a, y, left stick, and hitting top limit switch
+      
+       if (ElevatorTop.get()){
+        SetPointHeight = SetPointHeight - 0.01;
+      } else if (HeightController.a().getAsBoolean()){
+        SetPointHeight = 0.25;
+      } else if (HeightController.y().getAsBoolean()) {
+        SetPointHeight = 0.40;
+      } else if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
+        SetPointHeight = SetPointHeight + HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
+      }
+
+      setElevatorHeight(SetPointHeight);
+      
+    });
+
+ }
 
 
   

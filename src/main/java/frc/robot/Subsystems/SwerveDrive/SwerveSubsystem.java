@@ -99,9 +99,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
         new PPHolonomicDriveController( 
           //TODO Set proper pid values maybe
-          new PIDConstants(5.0, 0.0, 0.0),
+          new PIDConstants(0.0020645, 0.0, 0.0),
           //translation
-          new PIDConstants(5.0, 0.0, 0.0)
+          new PIDConstants(0.01, 0.0, 0.0)
           //rotation
         ),
         config,

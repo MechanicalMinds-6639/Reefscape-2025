@@ -6,7 +6,7 @@ import frc.robot.RobotMath.ArmMath;
 public class Constants {
     
     public static final class Drive {
-        public static final double MAX_SPEED = 1.0; //Meters per second
+        public static final double MAX_SPEED = 3.0; //Meters per second
 
         public static final int FL_ABS_ENCODER_ID = 0;
         public static final int FR_ABS_ENCODER_ID = 3;
@@ -18,6 +18,7 @@ public class Constants {
         public static final int DRIVER = 0;
         public static final int COPILOT = 1;
         public static final double DEADBAND = 0.1;
+        public static final double ARM_DEADBAND = 0.3;
     }
 
     public static final class CraneConstants {
@@ -33,7 +34,7 @@ public class Constants {
         // TODO set multipliers
         // Speed Multipliers
         public static final double TWIST_MULTIPLIER = 0.25;
-        public static final double ARM_MULTIPLIER = 0.25;
+        public static final double ARM_MULTIPLIER = 0.75;
         public static final double ELEVATOR_MULTIPLIER = 0.25;
         public static final double GRABBER_MULTIPLIER = 0.25;
 
@@ -55,6 +56,7 @@ public class Constants {
         public static final double ELEVATOR_KV = 7.4;//8;
         public static final double ELEVATOR_KA = 0.1;
         public static final double ELEVATOR_KS = 0;
+        public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.01;
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 4.01;
@@ -79,6 +81,15 @@ public class Constants {
         public static final int GRABBER_ID = 14;
         public static final int GRABBER_TWIST_ID = 11;
         public static final double TWIST_MULTIPLIER = 0.1;
-        public static final double GRABBER_SPEED = 0.25;
+        public static final double WRIST_AUTO_SPEED = 0.1;
+        public static final double GRABBER_SPEED = 0.6;
+        public static final double TWIST_RESTRAINT = 0.02;
+    }
+
+    public static final class ClimbConstants {
+        // TODO Set IDS
+        public static final int CLIMB_MOTOR_ID = 0;
+        public static final double CLIMBER_SPEED = 0.1;
+
     }
 }

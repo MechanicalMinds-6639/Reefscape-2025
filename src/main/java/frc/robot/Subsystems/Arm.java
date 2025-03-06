@@ -63,11 +63,20 @@ public class Arm extends SubsystemBase {
 
     return run(() -> {
 
+      System.out.println(ArmEncoder.getPosition());
+      if (Elbow.get()){
+        setZeroReferncePoint();
+      }
+
       double ArmSpeed = -CraneController.getRightY();
      
-      if (Math.abs(ArmSpeed) < Operator.DEADBAND) {
+      if (Math.abs(ArmSpeed) < Operator.ARM_DEADBAND) {
         ArmMax.set(0.0);
-      } else {
+      } 
+      else if (Elbow.get() && ArmSpeed > 0){
+        ArmMax.set(0.0);
+      }
+      else {
         ArmMax.set(-ArmSpeed * CraneConstants.ARM_MULTIPLIER);
       }
 
@@ -115,6 +124,21 @@ public class Arm extends SubsystemBase {
    public boolean aroundAngle(double degrees, double tolerance){
         return MathUtil.isNear(degrees, getAngle().in(Degrees),tolerance);
    }
+
+   public Command autoArmCommand(double setPoint) {
+    return run (() -> {
+      if (ArmEncoder.getPosition() >= setPoint) {
+        ArmMax.set(0);
+      } else {
+        ArmMax.set(CraneConstants.ARM_MAX_SPEED);
+      }
+    });
+   }
+
+  public void setZeroReferncePoint(){
+    ArmEncoder.setPosition(0);
+  }
+
 
   @Override
   public void periodic() {
