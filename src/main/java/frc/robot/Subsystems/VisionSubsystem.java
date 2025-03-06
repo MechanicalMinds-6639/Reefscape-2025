@@ -20,62 +20,107 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 
 public class VisionSubsystem extends SubsystemBase {
 
     PhotonCamera camera = new PhotonCamera("VisionCamera");
-
     PhotonTrackedTarget target = new PhotonTrackedTarget();
-
     Rotation3d pRotation3d = new Rotation3d();
-
-    Transform3d pCameraToRobot = new Transform3d(0.0, 0.0, 0.31, pRotation3d);
-    
+    Transform3d pCameraToRobot = new Transform3d(0.0, 0.0, 0.31, pRotation3d);    
     Pose3d robotPoseEstimate = new Pose3d();
-
     PhotonPipelineResult camResult = new PhotonPipelineResult();
+
+    //List target IDs for red alliance
+    int[] redTargetIDs = {1,2,6,7,8,9,10,11};
+
+    //List target IDs for blue alliance
+    int[] blueTargetIDs = {12,13,17,18,19,20,21,22};
 
 // The field from AprilTagFields will be different depending on the game.
  public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    
+ 
+ //Processing steps in periodic - intent is to distribute processing steps across several scans
+ private enum processStep {
+    kGetResult,
+    kGetTarget,
+    kGetPose,
+    kPublishResults
+ }
+ processStep step = processStep.kGetResult;
+
     @Override
     public void periodic(){
-        getCameraResult();
-        getTarget();
-        getPose3d();
-        publishFiducialID();
-        publishYaw();
-        publishPitch();
-        publishArea();
-        publishSkew();
-        publishPoseX();
-        publishPoseY();
-        SmartDashboard.putBoolean("hasTarget", hasTarget());
+        if (camera.isConnected()) {
+            switch(step) {
+                case kGetResult:
+                    if (getCameraResult()) {
+                        step = processStep.kGetTarget;                        
+                    }
+                    break;
+
+                case kGetTarget:
+                    if (getTarget()) {
+                        step = processStep.kGetPose;
+                    } else {step = processStep.kGetResult;}
+                    break;
+
+                case kGetPose:
+                    getPose3d();
+                    step = processStep.kPublishResults;
+                    break;
+
+                case kPublishResults:
+                    publishFiducialID();
+                    publishYaw();
+                    publishPitch();
+                    publishArea();
+                    publishSkew();
+                    publishPoseX();
+                    publishPoseY();
+                    step = processStep.kGetResult;
+                    break;
+                }
+        }
+
+
+        //publishFiducialID();
+        //publishYaw();
+        //publishPitch();
+        //publishArea();
+        //publishSkew();
+        //publishPoseX();
+        //publishPoseY();
+        //SmartDashboard.putBoolean("hasTarget", hasTarget());
     }
 
-private void getCameraResult() {
+
+
+private boolean getCameraResult() {
     try {
         camResult = camera.getAllUnreadResults().get(0);
+        return true;
     } catch (Exception e){
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");  
+        return false;  
     }
-}  
- 
+}
+
 public boolean hasTarget() {
-    // Check if the latest result has any targets.
+    // Check if the latest result has any targets. 
     return camResult.hasTargets();    
 }
 
-
-
-private void getTarget() {
+private boolean getTarget() {
     if (hasTarget()) {
         target = camResult.getBestTarget();
-    }
+        return true;
+    } else {return false;}
 }
 
 public double yawToTarget(){
@@ -85,7 +130,6 @@ public double yawToTarget(){
         return 0;
     }  
 }
-
 
 
 //Gets ID of best target Apriltag and displays
@@ -98,6 +142,7 @@ public void publishFiducialID() {
     }  
     SmartDashboard.putNumber("FiducialID", FiducialID);
 }
+
 //Gets Yaw of best target Apriltag and displays
 public void publishYaw() {
     double yaw = 0;
@@ -164,29 +209,57 @@ public void publishPoseY() {
     SmartDashboard.putNumber("PoseY", poseY);
 }
 
+private boolean isRedTarget(int tgt) {
+    boolean tgtFound = false;
+    for (int t : redTargetIDs) {
+        if (t == tgt) {
+            tgtFound =  true;
+        }
+    }
+    return tgtFound;
+}
 
- /* 
-public Command getAllUnreadResults() {
+private boolean isBlueTarget(int tgt) {
+    boolean tgtFound = false;
+    for (int t : blueTargetIDs) {
+        if (t == tgt) {
+            tgtFound =  true;
+        }
+    }
+    return tgtFound;
+}
+ 
+//Bind as default command for photonvision
+//Rumble controller if found target is on correct alliance side
+public Command rumbleAtTarget(CommandXboxController ctrl) {
     return run(() -> {
-        // Get information from target.
-        try {
-            target = camera.getAllUnreadResults().get(0).getBestTarget();
-            if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-                robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
-             }
-        } catch (Exception e) {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
-        }  
-    });}
-*/
+        boolean rumble = false;
+        //Check for target presence
+        if (hasTarget()) {
+            //check whether red or blue alliance
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                //Check if found target belongs to red side of field
+                if (isRedTarget(target.getFiducialId())) {
+                    rumble = true;
+                }
+            } else {
+                //Check if found target belongs to blue side of field
+                if (isBlueTarget(target.getFiducialId())) {
+                    rumble = true;
+                }
+            }
 
+        }
+
+        ctrl.setRumble(RumbleType.kBothRumble, (rumble ? 0.3 : 0.0));
+    });
+}
  
 private void getPose3d() {
         // Calculate robot's field relative pose
     if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
        robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
-    }
-    
+    }    
 }
 
 

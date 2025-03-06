@@ -25,60 +25,56 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
-  private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
-  private final VisionSubsystem photonVision = new VisionSubsystem();
-
-  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
-      () -> driverController.getLeftY() * -1,
-      () -> driverController.getLeftX() * -1)
-    .withControllerRotationAxis(driverController::getRightX)
-    .deadband(Constants.Operator.DEADBAND)
-    .scaleTranslation(0.8)
-    .allianceRelativeControl(true);
+    //private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+    private final VisionSubsystem photonVision = new VisionSubsystem();
   
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(
-    driverController::getRightX,
-    driverController::getRightY)
-    .headingWhile(true);
+    //SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
+    //    () -> driverController.getLeftY() * -1,
+    //    () -> driverController.getLeftX() * -1)
+    //  .withControllerRotationAxis(driverController::getRightX)
+    //  .deadband(Constants.Operator.DEADBAND)
+    //  .scaleTranslation(0.8)
+    //  .allianceRelativeControl(true);
+    
+    //SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(
+    //  driverController::getRightX,
+    //  driverController::getRightY)
+    //  .headingWhile(true);
+    //
+    //SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
+    //  .allianceRelativeControl(false);
   
-  SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-    .allianceRelativeControl(false);
-
-  public RobotContainer() {
-    configureBindings();
-    DriverStation.silenceJoystickConnectionWarning(true); // YOU CAN DO THIS?>>???????
-  }
-
-  private void configureBindings() {
-
-    //System.out.println("AJHKSDASHKASJHDHSAKJDHJKADHKJS");
-
-    Command driveFieldOrientedDirectAngle = driveBase.driveFieldOriented(driveDirectAngle);
-    Command driveFieldOrientedAngularVelocity = driveBase.driveFieldOriented(driveAngularVelocity);
-    Command driveRobotOrientedAngularVelocity = driveBase.driveFieldOriented(driveRobotOriented);
-
-    if (Robot.isSimulation()) {
-      driverController.start().onTrue(Commands.runOnce(() -> driveBase.resetOdometry(new Pose2d(3,3,new Rotation2d()))));
-      driverController.button(1).whileTrue(driveBase.sysIdDriveMotorCommand());
+    public RobotContainer() {
+      configureBindings();
+      DriverStation.silenceJoystickConnectionWarning(true); // YOU CAN DO THIS?>>???????
     }
-
-    driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
-    driverController.a().whileTrue(driveBase.centerModulesCommand());
-    driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro)); 
-    //driverController.y().onTrue((driveBase.aimAtTarget(photonVision.yawToTarget())));
-    //photonVision.setDefaultCommand(photonVision.getAllUnreadResults());
-    driverController.setRumble(RumbleType.kLeftRumble,
-      (photonVision.hasTarget() ? 0.0 : 1.0));
-   
-
   
-  }
+    private void configureBindings() {
+  
+      //System.out.println("AJHKSDASHKASJHDHSAKJDHJKADHKJS");
+  
+      //Command driveFieldOrientedDirectAngle = driveBase.driveFieldOriented(driveDirectAngle);
+      //Command driveFieldOrientedAngularVelocity = driveBase.driveFieldOriented(driveAngularVelocity);
+      //Command driveRobotOrientedAngularVelocity = driveBase.driveFieldOriented(driveRobotOriented);
+      Command rumbleAtTarget = photonVision.rumbleAtTarget(driverController);
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
-
-  public void setMotorBrake(boolean brake) {
-    driveBase.setMotorBrake(brake);
-  }
+      if (Robot.isSimulation()) {
+        //driverController.start().onTrue(Commands.runOnce(() -> driveBase.resetOdometry(new Pose2d(3,3,new Rotation2d()))));
+        //driverController.button(1).whileTrue(driveBase.sysIdDriveMotorCommand());
+      }
+  
+      //driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
+      //driverController.a().whileTrue(driveBase.centerModulesCommand());
+      //driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro)); 
+      //driverController.y().onTrue((driveBase.aimAtTarget(photonVision.yawToTarget())));
+      photonVision.setDefaultCommand(rumbleAtTarget);    
+    }
+  
+    public Command getAutonomousCommand() {
+      return Commands.print("No autonomous command configured");
+    }
+  
+    public void setMotorBrake(boolean brake) {
+      //driveBase.setMotorBrake(brake);
+    }
 }
