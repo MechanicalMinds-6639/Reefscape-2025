@@ -91,9 +91,9 @@ public class Wrist extends SubsystemBase {
   public Command autoWristCommand(double setPointDegrees) {
     return run(() -> {
       if(getAngleInDegrees() > setPointDegrees - 5 && getAngleInDegrees() < setPointDegrees + 5) {
-        GrabberTwistMax.set(GrabberConstants.WRIST_AUTO_SPEED);
-      } else {
         GrabberTwistMax.set(0.0);
+      } else {
+        GrabberTwistMax.set(GrabberConstants.WRIST_AUTO_SPEED);
       }
     }); 
   }
