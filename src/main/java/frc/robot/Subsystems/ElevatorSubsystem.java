@@ -5,6 +5,7 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -107,16 +108,20 @@ public class ElevatorSubsystem extends SubsystemBase {
       // Set point controls for a, y, left stick, and hitting top limit switch
       
        if (ElevatorTop.get()){
-        SetPointHeight = SetPointHeight - 0.01;
+        SetPointHeight = SetPointHeight - 0.001;
       } else if (HeightController.a().getAsBoolean()){
-        SetPointHeight = 0.25;
+        SetPointHeight = CraneConstants.ELEVATOR_CORAL_INTAKE_HEIGHT;
       } else if (HeightController.y().getAsBoolean()) {
-        SetPointHeight = 0.40;
+        SetPointHeight = CraneConstants.ELEVATOR_L4_HEIGHT;
       } else if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
-        SetPointHeight = SetPointHeight + HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
+        SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
       }
 
-      setElevatorHeight(SetPointHeight);
+      if (SetPointHeight > CraneConstants.ELEVATOR_MAX_HEIGHT){
+        SetPointHeight = CraneConstants.ELEVATOR_MAX_HEIGHT;
+      }
+      
+      reachGoal(SetPointHeight);
       
     });
 

@@ -23,6 +23,7 @@ import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.ElevatorSubsystem;
 import frc.robot.Subsystems.Grabber;
+import frc.robot.Subsystems.VisionSubsystem;
 import frc.robot.Subsystems.Wrist;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -37,6 +38,8 @@ public class RobotContainer {
   private final Grabber KCCGrabber = new Grabber();
   private final Arm arm = new Arm();
   private final Climber climber = new Climber();
+  private final VisionSubsystem photonVision = new VisionSubsystem();
+  
 
   private final SendableChooser<Command> autoChooser;
 
@@ -77,6 +80,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     //System.out.println("AJHKSDASHKASJHDHSAKJDHJKADHKJS");
+    Command rumbleAtTarget = photonVision.rumbleAtTarget(driverController);
 
     Command driveFieldOrientedDirectAngle = driveBase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAngularVelocity = driveBase.driveFieldOriented(driveAngularVelocity);
@@ -88,15 +92,19 @@ public class RobotContainer {
     }
 
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
-    elevator.setDefaultCommand(elevator.ElevatorConverterCommand(copilotController));
-    KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
+    //elevator.setDefaultCommand(elevator.ElevatorConverterCommand(copilotController));
+    //KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
+    KCCWrist.setDefaultCommand(KCCWrist.RunWrist(copilotController));
     climber.setDefaultCommand(climber.climberDefaultCommand(driverController));
     //driverController.y().whileTrue(elevator.setElevatorHeight(.4)).onFalse(elevator.stop());
+    elevator.setDefaultCommand(elevator.RunElevator(copilotController));
     arm.setDefaultCommand(arm.ArmConverterCommand(copilotController));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
     copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
+    photonVision.setDefaultCommand(rumbleAtTarget);  
+  
   }
 
   public Command getAutonomousCommand() {

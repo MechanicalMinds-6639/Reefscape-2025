@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase {
       if (xboxController.leftTrigger().getAsBoolean()) {
         ClimbMax.set(ClimbConstants.CLIMBER_SPEED);
       } else if (xboxController.rightTrigger().getAsBoolean()) {
-        ClimbMax.set(0);
+        ClimbMax.set(-ClimbConstants.CLIMBER_SPEED);
       } else {
         ClimbMax.set(0);
       }

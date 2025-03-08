@@ -63,7 +63,6 @@ public class Arm extends SubsystemBase {
 
     return run(() -> {
 
-      System.out.println(ArmEncoder.getPosition());
       if (Elbow.get()){
         setZeroReferncePoint();
       }

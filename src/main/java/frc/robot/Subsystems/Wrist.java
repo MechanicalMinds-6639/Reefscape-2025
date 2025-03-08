@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +32,7 @@ public class Wrist extends SubsystemBase {
   private final SparkMax GrabberTwistMax = new SparkMax(GrabberConstants.GRABBER_TWIST_ID, MotorType.kBrushless);
   private final SparkClosedLoopController GrabberTwistController = GrabberTwistMax.getClosedLoopController();
   private final RelativeEncoder WristEncoder = GrabberTwistMax.getEncoder();
+  private double SetPointAngle = 0.0;
 
   /** Creates a new Grabber. */
   public Wrist() {
@@ -39,6 +41,10 @@ public class Wrist extends SubsystemBase {
         .smartCurrentLimit(GrabberConstants.WRIST_CURRENT_LIMIT)  
         .idleMode(IdleMode.kBrake)
         .inverted(true);
+    cfg.closedLoop.p(GrabberConstants.WRIST_KP)
+                  .i(GrabberConstants.WRIST_KI)
+                  .d(GrabberConstants.WRIST_KD)
+                  .outputRange(-GrabberConstants.WRIST_MAX_OUTPUT, GrabberConstants.WRIST_MAX_OUTPUT);
     GrabberTwistMax.configure(cfg, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -99,11 +105,32 @@ public class Wrist extends SubsystemBase {
   }
 
   
+  public Command RunWrist (CommandXboxController HeightController){
+    return run (() -> {
+      
+       if (HeightController.a().getAsBoolean()){
+        SetPointAngle = GrabberConstants.WRIST_INTAKE_ANGLE;
+      } else if (HeightController.y().getAsBoolean()) {
+        SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
+      } else if (HeightController.getLeftTriggerAxis() > Operator.DEADBAND){
+        SetPointAngle = SetPointAngle + HeightController.getLeftTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
+      } else if (HeightController.getRightTriggerAxis() > Operator.DEADBAND){
+        SetPointAngle = SetPointAngle - HeightController.getRightTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
+      }
+  
+      GrabberTwistController.setReference(Degrees.of(SetPointAngle).in(Rotations)*10, ControlType.kPosition);
+      System.out.println(Degrees.of(SetPointAngle).in(Rotations)*10);
+    });
+
+ }
+
 
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Wrist Setpoint", SetPointAngle);
+    SmartDashboard.putNumber("Wrist Position", getAngleInDegrees());
   }
 }

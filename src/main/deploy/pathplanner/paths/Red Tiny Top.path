@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 10.584217171717171,
+        "x": 11.5,
         "y": 6.677840909090909
       },
       "prevControl": {
-        "x": 10.334217171717171,
+        "x": 11.25,
         "y": 6.677840909090909
       },
       "nextControl": null,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -179.54164354199958
   },
   "reversed": false,
   "folder": "Tiny Moves",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 178.9646468134551
   },
   "useDefaultConstraints": true
 }

@@ -56,7 +56,10 @@ public class Constants {
         public static final double ELEVATOR_KV = 7.4;//8;
         public static final double ELEVATOR_KA = 0.1;
         public static final double ELEVATOR_KS = 0;
-        public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.01;
+        public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.005;
+        public static final double ELEVATOR_MAX_HEIGHT = 0.56;
+        public static final double ELEVATOR_L4_HEIGHT = 0.55;
+        public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.05;
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 4.01;
@@ -74,7 +77,7 @@ public class Constants {
         public static final double ARM_DEFAULT_TOLERANCE = 1;
 
     }
-
+        //Wrist/Grabber Constants
     public static final class GrabberConstants {
         public static final int WRIST_CURRENT_LIMIT = 40;
         public static final double WRIST_CLOSED_LOOP_RAMP_RATE = 0.25;
@@ -84,12 +87,20 @@ public class Constants {
         public static final double WRIST_AUTO_SPEED = 0.1;
         public static final double GRABBER_SPEED = 0.6;
         public static final double TWIST_RESTRAINT = 0.02;
+        public static final double WRIST_INTAKE_ANGLE = 90;
+        public static final double WRIST_SCORING_ANGLE = 0;
+        public static final double WRIST_KP = 0.0415;
+        public static final double WRIST_KI = 0;
+        public static final double WRIST_KD = 0;
+        //BELOW NEEDS TO BE UPED
+        public static final double WRIST_SETPOINT_MULTIPLIER = 4;
+        public static final double WRIST_MAX_OUTPUT = 0.4;
     }
 
     public static final class ClimbConstants {
         // TODO Set IDS
-        public static final int CLIMB_MOTOR_ID = 0;
-        public static final double CLIMBER_SPEED = 0.1;
+        public static final int CLIMB_MOTOR_ID = 10;
+        public static final double CLIMBER_SPEED = 0.25;
 
     }
 }
