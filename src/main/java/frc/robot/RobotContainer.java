@@ -101,8 +101,9 @@ public class RobotContainer {
     arm.setDefaultCommand(arm.ArmConverterCommand(copilotController));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
-    copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
-    copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
+    //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
+    //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
+    KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
     photonVision.setDefaultCommand(rumbleAtTarget);  
   
   }

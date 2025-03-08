@@ -116,10 +116,6 @@ public class ElevatorSubsystem extends SubsystemBase {
       } else if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
         SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
       }
-
-      if (SetPointHeight > CraneConstants.ELEVATOR_MAX_HEIGHT){
-        SetPointHeight = CraneConstants.ELEVATOR_MAX_HEIGHT;
-      }
       
       reachGoal(SetPointHeight);
       

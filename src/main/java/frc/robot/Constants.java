@@ -89,18 +89,18 @@ public class Constants {
         public static final double TWIST_RESTRAINT = 0.02;
         public static final double WRIST_INTAKE_ANGLE = 90;
         public static final double WRIST_SCORING_ANGLE = 0;
-        public static final double WRIST_KP = 0.0415;
+        public static final double WRIST_KP = 0.35;
         public static final double WRIST_KI = 0;
-        public static final double WRIST_KD = 0;
-        //BELOW NEEDS TO BE UPED
-        public static final double WRIST_SETPOINT_MULTIPLIER = 4;
+        public static final double WRIST_KD = 2;
+        //BELOW NEEDS TO BE RAISED
+        public static final double WRIST_SETPOINT_MULTIPLIER = 10;
         public static final double WRIST_MAX_OUTPUT = 0.4;
     }
 
     public static final class ClimbConstants {
         // TODO Set IDS
         public static final int CLIMB_MOTOR_ID = 10;
-        public static final double CLIMBER_SPEED = 0.25;
+        public static final double CLIMBER_SPEED = 0.5;
 
     }
 }

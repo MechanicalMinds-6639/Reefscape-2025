@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.GrabberConstants;
 
 public class Grabber extends SubsystemBase {
@@ -19,13 +20,29 @@ public class Grabber extends SubsystemBase {
 
   public Command Grab(int direction) {
 
+    
     return run(() -> {
     if (direction == 1) {
       GrabberMax.set(GrabberConstants.GRABBER_SPEED);
     } else if (direction == -1) {
       GrabberMax.set(-GrabberConstants.GRABBER_SPEED);
     } else {
-      GrabberMax.set(0.0);
+      System.out.println("YAY");
+      GrabberMax.set(0);
+    }
+  
+    });
+  }
+
+  public Command grabberDefaultCommand(CommandXboxController HeightController) {
+
+    return run(() -> {
+    if (HeightController.leftBumper().getAsBoolean()) {
+      GrabberMax.set(GrabberConstants.GRABBER_SPEED);
+    } else if (HeightController.rightBumper().getAsBoolean()) {
+      GrabberMax.set(-GrabberConstants.GRABBER_SPEED);
+    } else {
+      GrabberMax.set(0.1);
     }
   
     });
