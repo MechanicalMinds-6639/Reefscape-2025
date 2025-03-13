@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Subsystems.Arm;
@@ -37,15 +38,15 @@ public class RobotContainer {
   private final Wrist KCCWrist = new Wrist();
   private final Grabber KCCGrabber = new Grabber();
   private final Arm arm = new Arm();
-  private final Climber climber = new Climber();
+  //private final Climber climber = new Climber();
   private final VisionSubsystem photonVision = new VisionSubsystem();
   
 
   private final SendableChooser<Command> autoChooser;
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveBase.getSwerveDrive(),
-      () -> driverController.getLeftY() * -1,
-      () -> driverController.getLeftX() * -1)
+      () -> driverController.getLeftY(),
+      () -> driverController.getLeftX())
     .withControllerRotationAxis(driverController::getRightX)
     .deadband(Constants.Operator.DEADBAND)
     .scaleTranslation(0.8)
@@ -69,11 +70,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("Dumb Arm Command", arm.autoArmCommand(2.75)
       .withTimeout(3));
     NamedCommands.registerCommand("Auto Spit Command", KCCGrabber.Grab(-1)
-      .withTimeout(1.5).andThen(KCCGrabber.Grab(0)));
+      .withTimeout(1.5).andThen(KCCGrabber.Grab(0).withTimeout(0.1)));
+    NamedCommands.registerCommand("Arm Lower Slowly", arm.setSpeed(0.45)
+      .withTimeout(1.5).andThen(arm.setSpeed(0).withTimeout(0.1)));
+    NamedCommands.registerCommand("90 Degree Wrist Command", new ParallelRaceGroup(KCCWrist.setWristAngle(90), KCCGrabber.grabberAutoBackspinCommand()).withTimeout(1));
+    NamedCommands.registerCommand("Arm Timeout", arm.setSpeed(0.1)
+      .withTimeout(1));
+    NamedCommands.registerCommand("Dumb Wrist Timeout", KCCWrist.SetWristSpeed(-0.1)
+      .withTimeout(1).andThen(KCCWrist.SetWristSpeed(0).withTimeout(0.1)));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
-    SmartDashboard.putData(autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   
@@ -92,15 +100,14 @@ public class RobotContainer {
     }
 
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
-    //elevator.setDefaultCommand(elevator.ElevatorConverterCommand(copilotController));
     //KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
     KCCWrist.setDefaultCommand(KCCWrist.RunWrist(copilotController));
-    climber.setDefaultCommand(climber.climberDefaultCommand(driverController));
+    //climber.setDefaultCommand(climber.climberDefaultCommand(driverController));
     //driverController.y().whileTrue(elevator.setElevatorHeight(.4)).onFalse(elevator.stop());
-    elevator.setDefaultCommand(elevator.RunElevator(copilotController));
+    elevator.setDefaultCommand(elevator.RunElevator(copilotController, driverController));
     arm.setDefaultCommand(arm.ArmConverterCommand(copilotController));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
-    driverController.x().onTrue(Commands.runOnce(driveBase::zeroGyro));
+    driverController.y().onTrue(Commands.runOnce(driveBase::zeroGyro));
     //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
     KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
@@ -113,15 +120,20 @@ public class RobotContainer {
   }
 
   public void resetGyro(){
-    Commands.runOnce(driveBase::zeroGyro);
+    driveBase.zeroGyro();
   }
 
   public void resetWrist() {
-    Commands.runOnce(KCCWrist::setZeroReferncePoint);
+    KCCWrist.setZeroReferncePoint();
   }
 
   public void resetArm() {
-    Commands.runOnce(arm::setZeroReferncePoint);
+    arm.setZeroReferncePoint();
+  }
+
+  public void resetElevator() {
+    elevator.resetElevatorCommand();
+    elevator.reset();
   }
 
   public void setMotorBrake(boolean brake) {

@@ -59,7 +59,7 @@ public class Wrist extends SubsystemBase {
   public Command setWristAngle(double angle)
   {
     return run(() -> {
-      GrabberTwistController.setReference(Degrees.of(angle).in(Rotations), ControlType.kPosition);
+      GrabberTwistController.setReference(Degrees.of(angle).in(Rotations)*10, ControlType.kPosition);
     });
   }
 
@@ -102,6 +102,12 @@ public class Wrist extends SubsystemBase {
         GrabberTwistMax.set(GrabberConstants.WRIST_AUTO_SPEED);
       }
     }); 
+  }
+
+  public Command SetWristSpeed (double speed){
+    return run(()-> {
+      GrabberTwistMax.set(speed);
+    });
   }
 
   

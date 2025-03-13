@@ -31,7 +31,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    
+    //m_robotContainer.resetElevator();
+  }
 
   @Override
   public void autonomousInit() {
@@ -56,6 +59,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.resetElevator();
+    m_robotContainer.resetGyro();
+
   }
 
   @Override

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.361,
+        "x": 11.597,
         "y": 3.975
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.111,
-        "y": 3.975
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 11.597,
-        "y": 3.975
-      },
-      "prevControl": {
         "x": 11.347,
         "y": 3.975
       },
-      "nextControl": null,
       "isLocked": false,
       "linkedName": "Mid Score End Point"
+    },
+    {
+      "anchor": {
+        "x": 11.02689912893635,
+        "y": 3.975
+      },
+      "prevControl": {
+        "x": 11.498466297707726,
+        "y": 3.9860698345212113
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "Basic Mid Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.90164785454036
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

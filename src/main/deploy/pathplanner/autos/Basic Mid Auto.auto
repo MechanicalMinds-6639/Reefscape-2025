@@ -13,19 +13,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Dumb Arm Command"
+            "name": "Arm Lower Slowly"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Dumb Wrist Command"
+            "name": "90 Degree Wrist Command"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Auto Spit Command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Backy Uppy"
           }
         }
       ]

@@ -41,6 +41,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private double SetPointHeight = 0.0;
 
+  private boolean elevatorMode = true;
+
   //PID Controllers
    private final ProfiledPIDController ElevatorController = new ProfiledPIDController(CraneConstants.ELEVATOR_KP,
             CraneConstants.ELEVATOR_KI,
@@ -67,23 +69,48 @@ public class ElevatorSubsystem extends SubsystemBase {
       ElevatorLMax.configure(LeftElevatorConfig, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kPersistParameters);//
     
     }
+    
+  public Command RunElevator (CommandXboxController HeightController, CommandXboxController DriverController){
 
-  
-  
 
-  /*
-   * Command to control the crane motion
-   */
-  public Command ElevatorConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
+    
 
-    return run(() -> {
+    //true is PID control
+
+    return run (() -> {
+
+      //System.out.println(HeightController.povDown().getAsBoolean()+" : "+DriverController.povDown().getAsBoolean());
+
+      if (elevatorMode) {
+
+      if (HeightController.povDown().getAsBoolean() && DriverController.povDown().getAsBoolean()) {
+        elevatorMode = false;
+        System.out.println("OVERRIDE: Elevator no longer using PID control");
+      }
+        
+        //Sets elevator encoder to 0 when bottom limit switch is hit
+      if (HeightController.b().getAsBoolean()){
+        reset();
+      }
+      
+      if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
+        //make if statement to go up if limit switch is pressed down and not allow down, 
+        SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
+      }
+
+      reachGoal(SetPointHeight);
+    } else {
+      if (HeightController.b().getAsBoolean()){
+        ElevatorEncoder.setPosition(0);
+      }
+
       if (ElevatorBottom.get()) {
         ElevatorEncoder.setPosition(0.0);
       }
       
       //System.out.println(getPositionMeters());
 
-      double ElevatorSpeed = CraneController.getLeftY();
+      double ElevatorSpeed = HeightController.getLeftY();
 
       // Elevator speed control
       if ((Math.abs(ElevatorSpeed) < Operator.DEADBAND) ||
@@ -93,33 +120,11 @@ public class ElevatorSubsystem extends SubsystemBase {
       } else {
         ElevatorLMax.set(-ElevatorSpeed * CraneConstants.ELEVATOR_MULTIPLIER);
       }
-
+    }
+        
     });
-  }
-
-  public Command RunElevator (CommandXboxController HeightController){
-    return run (() -> {
-
-      //Sets elevator encoder to 0 when bottom limit switch is hit
-      if (ElevatorBottom.get()){
-        ElevatorEncoder.setPosition(0);
-      }
-
-      // Set point controls for a, y, left stick, and hitting top limit switch
-      
-       if (ElevatorTop.get()){
-        SetPointHeight = SetPointHeight - 0.001;
-      } else if (HeightController.a().getAsBoolean()){
-        SetPointHeight = CraneConstants.ELEVATOR_CORAL_INTAKE_HEIGHT;
-      } else if (HeightController.y().getAsBoolean()) {
-        SetPointHeight = CraneConstants.ELEVATOR_L4_HEIGHT;
-      } else if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
-        SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
-      }
-      
-      reachGoal(SetPointHeight);
-      
-    });
+  
+    
 
  }
 
@@ -166,10 +171,23 @@ public class ElevatorSubsystem extends SubsystemBase {
         return MathUtil.isNear(height,getPositionMeters(),tolerance);
     }
 
+  public void reset() {
+    SetPointHeight = 0;
+    System.out.println("Elevator setpoint to zero");
+  }
+
+  public void resetElevatorCommand() {
+    System.out.println("Elevator using PID control");
+    elevatorMode = true;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Setpoint", ElevatorController.getSetpoint().position);
     SmartDashboard.putNumber("Elevator Position", getPositionMeters());
+    if (SetPointHeight < 0) {
+      SetPointHeight = 0;
+    }
   }
 }

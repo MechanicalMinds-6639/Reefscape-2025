@@ -238,7 +238,7 @@ public Command rumbleAtTarget(CommandXboxController ctrl) {
             }
 
         }
-
+        //camera.setDriverMode(true);
         ctrl.setRumble(RumbleType.kBothRumble, (rumble ? 0.3 : 0.0));
     });
 }

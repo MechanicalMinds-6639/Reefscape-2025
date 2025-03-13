@@ -34,6 +34,12 @@ public class Grabber extends SubsystemBase {
     });
   }
 
+  public Command grabberAutoBackspinCommand() {
+    return run(() -> {
+      GrabberMax.set(0.1);
+    });
+  }
+
   public Command grabberDefaultCommand(CommandXboxController HeightController) {
 
     return run(() -> {

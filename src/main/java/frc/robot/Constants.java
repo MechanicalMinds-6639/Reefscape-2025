@@ -58,8 +58,8 @@ public class Constants {
         public static final double ELEVATOR_KS = 0;
         public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.005;
         public static final double ELEVATOR_MAX_HEIGHT = 0.56;
-        public static final double ELEVATOR_L4_HEIGHT = 0.55;
-        public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.05;
+        public static final double ELEVATOR_L4_HEIGHT = 0.53;
+        public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.01;
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 4.01;
@@ -100,7 +100,7 @@ public class Constants {
     public static final class ClimbConstants {
         // TODO Set IDS
         public static final int CLIMB_MOTOR_ID = 10;
-        public static final double CLIMBER_SPEED = 0.5;
+        public static final double CLIMBER_SPEED = 0.75;
 
     }
 }

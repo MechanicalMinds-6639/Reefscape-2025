@@ -92,6 +92,12 @@ public class Arm extends SubsystemBase {
     });
   }
 
+    public Command setSpeed(double speed){
+      return run(() -> {
+        ArmMax.set(speed);
+      });
+    }
+
    //methods/command
     public Angle getAngle() {
         return ArmMath.convertSensorUnitsToArmAngle(Rotations.of(ArmEncoder.getPosition()));
@@ -133,6 +139,7 @@ public class Arm extends SubsystemBase {
       }
     });
    }
+
 
   public void setZeroReferncePoint(){
     ArmEncoder.setPosition(0);
