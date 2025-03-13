@@ -58,7 +58,7 @@ public class Constants {
         public static final double ELEVATOR_KS = 0;
         public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.005;
         public static final double ELEVATOR_MAX_HEIGHT = 0.56;
-        public static final double ELEVATOR_L4_HEIGHT = 0.53;
+        public static final double ELEVATOR_L3_HEIGHT = 0.3;
         public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.01;
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;

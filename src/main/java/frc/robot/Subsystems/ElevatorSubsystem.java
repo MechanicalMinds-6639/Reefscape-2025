@@ -69,7 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       ElevatorLMax.configure(LeftElevatorConfig, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kPersistParameters);//
     
     }
-    
+
   public Command RunElevator (CommandXboxController HeightController, CommandXboxController DriverController){
 
 
@@ -96,18 +96,17 @@ public class ElevatorSubsystem extends SubsystemBase {
       if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
         //make if statement to go up if limit switch is pressed down and not allow down, 
         SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
-      }
+      } else if (HeightController.y().getAsBoolean()){
+          SetPointHeight = CraneConstants.ELEVATOR_L3_HEIGHT;
+      } else if (HeightController.a().getAsBoolean()){
+        SetPointHeight = CraneConstants.ELEVATOR_CORAL_INTAKE_HEIGHT;
+    }
 
       reachGoal(SetPointHeight);
     } else {
       if (HeightController.b().getAsBoolean()){
         ElevatorEncoder.setPosition(0);
       }
-
-      if (ElevatorBottom.get()) {
-        ElevatorEncoder.setPosition(0.0);
-      }
-      
       //System.out.println(getPositionMeters());
 
       double ElevatorSpeed = HeightController.getLeftY();
