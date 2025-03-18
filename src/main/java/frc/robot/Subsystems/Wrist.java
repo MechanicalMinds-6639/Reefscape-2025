@@ -67,7 +67,6 @@ public class Wrist extends SubsystemBase {
   public Command GrabberConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
 
     return run(() -> {
-      //System.out.println(getAngleInDegrees());
       if (CraneController.start().getAsBoolean()){
         setZeroReferncePoint();
       }
@@ -113,10 +112,8 @@ public class Wrist extends SubsystemBase {
   
   public Command RunWrist (CommandXboxController HeightController){
     return run (() -> {
-      
-      if (HeightController.start().getAsBoolean()){
-        setZeroReferncePoint();
-      }
+      System.out.println(getAngleInDegrees());
+
 
        if (HeightController.a().getAsBoolean()){
         SetPointAngle = GrabberConstants.WRIST_INTAKE_ANGLE;

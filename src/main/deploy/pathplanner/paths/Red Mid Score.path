@@ -48,7 +48,7 @@
   "folder": "Basic Mid Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.90164785454036
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 11.597,
+        "x": 11.661,
         "y": 3.975
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.347,
+        "x": 11.411,
         "y": 3.975
       },
       "isLocked": false,
-      "linkedName": "Mid Score End Point"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 11.02689912893635,
+        "x": 11.027,
         "y": 3.975
       },
       "prevControl": {
-        "x": 11.498596209592334,
+        "x": 11.498999999999999,
         "y": 3.975
       },
       "nextControl": null,

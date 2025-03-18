@@ -89,7 +89,7 @@ public class Constants {
         public static final double TWIST_RESTRAINT = 0.02;
         public static final double WRIST_INTAKE_ANGLE = 90;
         public static final double WRIST_SCORING_ANGLE = 0;
-        public static final double WRIST_KP = 0.35;
+        public static final double WRIST_KP = 0.4;
         public static final double WRIST_KI = 0;
         public static final double WRIST_KD = 2;
         //BELOW NEEDS TO BE RAISED
