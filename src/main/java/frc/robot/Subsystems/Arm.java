@@ -54,7 +54,6 @@ public class Arm extends SubsystemBase {
 
     // Sets PID in Arm Config
     SparkMaxConfig ArmConfig = new SparkMaxConfig();
-    ArmConfig.closedLoop.p(0);
     ArmConfig.smartCurrentLimit(40);
 
   }
@@ -62,6 +61,8 @@ public class Arm extends SubsystemBase {
     public Command ArmConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
 
     return run(() -> {
+
+      System.out.println("Arm Angle: " + getAngle());
 
       if (Elbow.get()){
         setZeroReferncePoint();
@@ -102,7 +103,7 @@ public class Arm extends SubsystemBase {
     public Angle getAngle() {
         return ArmMath.convertSensorUnitsToArmAngle(Rotations.of(ArmEncoder.getPosition()));
     }
-
+    
     public AngularVelocity getVelocity() {
         return ArmMath.convertSensorUnitsToArmAngle(Rotations.of(ArmEncoder.getVelocity())).per(Minute);
     }

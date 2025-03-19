@@ -71,10 +71,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
   public Command RunElevator (CommandXboxController HeightController, CommandXboxController DriverController){
-
-
-    
-
     //true is PID control
 
     return run (() -> {
