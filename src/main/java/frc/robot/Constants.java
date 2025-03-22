@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-import frc.robot.RobotMath.ArmMath;
 
 public class Constants {
     
@@ -34,19 +33,21 @@ public class Constants {
         // TODO set multipliers
         // Speed Multipliers
         public static final double TWIST_MULTIPLIER = 0.25;
-        public static final double ARM_MULTIPLIER = 0.75;
+        public static final double ARM_MULTIPLIER = 0.5;
         public static final double ELEVATOR_MULTIPLIER = 0.25;
         public static final double GRABBER_MULTIPLIER = 0.25;
-
+      
+        //Arm Constants
+        public static final double ARM_REDUCTION = 416.66667;
+        public static final double ARM_DEFAULT_TOLERANCE = 1;
+      
         // TODO set speed
         public static final double ELEVATOR_MAX_SPEED = 0.2;
         public static final double ELEVATOR_MAX_VELOCITY = Meters.of(0.5).per(Second).in(MetersPerSecond);
         public static final double ELEVATOR_MAX_ACCELERATION = Meters.of(0.5).per(Second).per(Second).in(MetersPerSecondPerSecond);
         public static final double ARM_MAX_SPEED = 0.2;
-        public static final double ARM_MAX_ACCELERATION = ArmMath.convertArmAngleToSensorUnits(Degrees.of(180))
-            .per(Second).per(Second).in(RPM.per(Second)) ;
-        public static final double ARM_MAX_VELOCITY = ArmMath.convertArmAngleToSensorUnits(Degrees.of(90))//?
-            .per(Second).in(RPM) ;
+        public static final double ARM_MAX_ACCELERATION = Degrees.of(15).per(Second).per(Second).in(RPM.per(Second)) * ARM_REDUCTION;
+        public static final double ARM_MAX_VELOCITY = Degrees.of(30).per(Second).in(RPM) * ARM_REDUCTION;
 
         // TODO PID Constants
         public static final double ELEVATOR_KP = 10;
@@ -62,9 +63,14 @@ public class Constants {
         public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.01;
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
-        public static final double ARM_KG = 4.01;
-        public static final double ARM_KV = 0.39;
-        public static final double ARM_KA = 0.21;
+        public static final double ARM_KG = 0; //4.01;
+        public static final double ARM_KV = 0.2; //.39;
+        public static final double ARM_KA = 0; //.21;
+        public static final double ARM_KP = 0.1; //0.1;
+        public static final double ARM_KS = 0;
+        public static final double ARM_L3_DEGREE = 40.0;
+        public static final double ARM_CORAL_INTAKE_DEGREE = 20.0;
+        public static final double ARM_SETPOINT_MULTIPLIER = -0.1;
 
         //Elevator Constants
         public static final double ELEVATOR_DRUM_RADIUS = 0.0222377; //pitch radius of that one gear on the elevator, yeah
@@ -72,9 +78,7 @@ public class Constants {
         public static final double ELEVATOR_GEARING = 9;
         public static final double ELEVATOR_DEFAULT_TOLERANCE =  Inches.of(1).in(Meters);
 
-        //Arm Constants
-        public static final double ARM_REDUCTION = 20;
-        public static final double ARM_DEFAULT_TOLERANCE = 1;
+
 
     }
         //Wrist/Grabber Constants

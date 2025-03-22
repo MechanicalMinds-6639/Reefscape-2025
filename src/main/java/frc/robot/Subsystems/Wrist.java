@@ -112,7 +112,6 @@ public class Wrist extends SubsystemBase {
   
   public Command RunWrist (CommandXboxController HeightController){
     return run (() -> {
-      System.out.println(getAngleInDegrees());
 
 
        if (HeightController.a().getAsBoolean()){

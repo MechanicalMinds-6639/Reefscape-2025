@@ -5,6 +5,8 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -13,15 +15,16 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
 import frc.robot.Constants.Operator;
-import frc.robot.RobotMath.ArmMath;
 import static edu.wpi.first.units.Units.*;
 
 
@@ -37,15 +40,17 @@ public class Arm extends SubsystemBase {
   private final DigitalInput Elbow = new DigitalInput(CraneConstants.LIMIT_ELBOW);
 
  //PID Controllers
-   private final ProfiledPIDController ArmController = new ProfiledPIDController(CraneConstants.ELEVATOR_KP,
+   private final ProfiledPIDController ArmController = new ProfiledPIDController(CraneConstants.ARM_KP,
             CraneConstants.ARM_KI,
             CraneConstants.ARM_KD,
             new Constraints(CraneConstants.ARM_MAX_VELOCITY,
                     CraneConstants.ARM_MAX_ACCELERATION));
-    private final ArmFeedforward ArmFeedforward = new ArmFeedforward(CraneConstants.ELEVATOR_KS,
+    private final ArmFeedforward ArmFeedforward = new ArmFeedforward(CraneConstants.ARM_KS,
             CraneConstants.ARM_KG,
             CraneConstants.ARM_KV,
             CraneConstants.ARM_KA);
+            
+    private double ArmDegreeSetPoint = ArmEncoder.getPosition() *360/CraneConstants.ARM_REDUCTION;
 
 
 
@@ -55,14 +60,46 @@ public class Arm extends SubsystemBase {
     // Sets PID in Arm Config
     SparkMaxConfig ArmConfig = new SparkMaxConfig();
     ArmConfig.smartCurrentLimit(40);
+    ArmMax.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    ArmDegreeSetPoint = ArmEncoder.getPosition() *360/CraneConstants.ARM_REDUCTION;
 
   }
+
+    public Command RunArm(CommandXboxController CraneController){
+
+      return run (() -> {
+
+
+        if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
+          //make if statement to go up if limit switch is pressed down and not allow down, 
+          ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * CraneConstants.ARM_SETPOINT_MULTIPLIER;
+        } else if (CraneController.y().getAsBoolean()){
+            ArmDegreeSetPoint = CraneConstants.ARM_L3_DEGREE;
+        } else if (CraneController.a().getAsBoolean()){
+          ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_DEGREE;
+      }
+
+       if (!Elbow.get()){
+        reachGoal(ArmDegreeSetPoint);
+       } else {
+        ArmMax.set(0);
+       }
+
+
+       if (Elbow.get()){
+        setZeroReferncePoint();
+      }
+      });
+
+    }
+
+
 
     public Command ArmConverterCommand(CommandXboxController CraneController){ //double ElevatorSpeed, double ArmSpeed, double TwistSpeed, double GrabberSpeed
 
     return run(() -> {
 
-      System.out.println("Arm Angle: " + getAngle());
+      System.out.println("Arm Angle: " + getAngleAsDouble());
 
       if (Elbow.get()){
         setZeroReferncePoint();
@@ -99,20 +136,30 @@ public class Arm extends SubsystemBase {
       });
     }
 
+    public double getRotations(){
+      return ArmEncoder.getPosition();
+    }
+
    //methods/command
     public Angle getAngle() {
-        return ArmMath.convertSensorUnitsToArmAngle(Rotations.of(ArmEncoder.getPosition()));
+        return Degrees.of(Units.rotationsToDegrees(ArmEncoder.getPosition() / CraneConstants.ARM_REDUCTION));
     }
-    
-    public AngularVelocity getVelocity() {
-        return ArmMath.convertSensorUnitsToArmAngle(Rotations.of(ArmEncoder.getVelocity())).per(Minute);
-    }
+
+    public Double getAngleAsDouble() {
+      return Units.rotationsToDegrees(ArmEncoder.getPosition() / CraneConstants.ARM_REDUCTION);
+  }
+
+    public AngularVelocity getAnglularVelocity() {
+      return Degrees.of(Units.rotationsToDegrees(ArmEncoder.getVelocity() / CraneConstants.ARM_REDUCTION)).per(Minute);
+  }
 
     public void reachGoal(double goalDegrees) {
-        double goal = ArmMath.convertArmAngleToSensorUnits(Degrees.of(goalDegrees)).in(Rotations);
-
-        ArmMax.setVoltage(ArmFeedforward.calculate(ArmController.getSetpoint().position, ArmController.getSetpoint().velocity)
-                + ArmController.calculate(ArmEncoder.getPosition(), goal));
+        double goal = Degrees.of(goalDegrees).in(Rotations) * CraneConstants.ARM_REDUCTION;
+        double clampedValue = MathUtil.clamp(
+          ArmFeedforward.calculate(ArmController.getSetpoint().position, ArmController.getSetpoint().velocity)
+            + ArmController.calculate(ArmEncoder.getPosition(), goal), -7, 7);
+        ArmMax.setVoltage(clampedValue);
+        System.out.println(clampedValue);
     }
 
     public Command setGoal(double goalDegrees) {
@@ -146,9 +193,11 @@ public class Arm extends SubsystemBase {
     ArmEncoder.setPosition(0);
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
+    SmartDashboard.putNumber("Arm Setpoint", ArmController.getSetpoint().position);
+    SmartDashboard.putNumber("Arm Position", getRotations());
   }
 }

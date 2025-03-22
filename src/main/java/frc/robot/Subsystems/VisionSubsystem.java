@@ -33,7 +33,8 @@ public class VisionSubsystem extends SubsystemBase {
     PhotonCamera camera = new PhotonCamera("VisionCamera");
     PhotonTrackedTarget target = new PhotonTrackedTarget();
     Rotation3d pRotation3d = new Rotation3d();
-    Transform3d pCameraToRobot = new Transform3d(0.0, 0.0, 0.31, pRotation3d);    
+    Transform3d pCameraToRobot = new Transform3d(0.216, 0.220, 0.505, pRotation3d);  
+    //Transform3d pCameraToRobot = new Transform3d();
     Pose3d robotPoseEstimate = new Pose3d();
     PhotonPipelineResult camResult = new PhotonPipelineResult();
 
@@ -135,7 +136,8 @@ public void publishFiducialID() {
 public void publishYaw() {
     double yaw = 0;
     try {
-        yaw = target.getYaw();
+        //yaw = target.getYaw();
+        yaw = robotPoseEstimate.getRotation().getAngle();
     } catch (Exception e) {
         yaw = -1;
     }  
