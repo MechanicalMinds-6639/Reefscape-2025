@@ -33,10 +33,12 @@ public class VisionSubsystem extends SubsystemBase {
     PhotonCamera camera = new PhotonCamera("VisionCamera");
     PhotonTrackedTarget target = new PhotonTrackedTarget();
     Rotation3d pRotation3d = new Rotation3d();
-    Transform3d pCameraToRobot = new Transform3d(0.216, 0.220, 0.505, pRotation3d);  
+    Transform3d pCameraToRobot = new Transform3d(-0.216, -0.220, 0.505, pRotation3d);  
     //Transform3d pCameraToRobot = new Transform3d();
-    Pose3d robotPoseEstimate = new Pose3d();
+    Pose3d RobotPoseEstimate3d = new Pose3d();
+    Pose2d RobotPoseEstimate2d = new Pose2d();
     PhotonPipelineResult camResult = new PhotonPipelineResult();
+    Rotation2d yawToTarget = new Rotation2d();
 
     //List target IDs for red alliance
     int[] redTargetIDs = {1,2,6,7,8,9,10,11};
@@ -51,7 +53,7 @@ public class VisionSubsystem extends SubsystemBase {
  private enum processStep {
     kGetResult,
     kGetTarget,
-    kGetPose,
+    kGetPoseInfo,
     kPublishResults
  }
  processStep step = processStep.kGetResult;
@@ -68,18 +70,21 @@ public class VisionSubsystem extends SubsystemBase {
 
                 case kGetTarget:
                     if (getTarget()) {
-                        step = processStep.kGetPose;
+                        step = processStep.kGetPoseInfo;
                     } else {step = processStep.kGetResult;}
                     break;
 
-                case kGetPose:
+                case kGetPoseInfo:
                     getPose3d();
+                    getPose2d();
+                    getYawToBestTarget();
                     step = processStep.kPublishResults;
                     break;
 
                 case kPublishResults:
                     publishFiducialID();
                     publishYaw();
+                    publishYawToBestTarget();
                     publishPitch();
                     publishArea();
                     publishSkew();
@@ -137,11 +142,23 @@ public void publishYaw() {
     double yaw = 0;
     try {
         //yaw = target.getYaw();
-        yaw = robotPoseEstimate.getRotation().getAngle();
+        yaw = RobotPoseEstimate3d.getRotation().getAngle();
     } catch (Exception e) {
         yaw = -1;
     }  
     SmartDashboard.putNumber("Yawwwwl", yaw);
+}
+
+//Publish Yaw to best target
+public void publishYawToBestTarget() {
+    double yaw = 0;
+    try {
+        //yaw = target.getYaw();
+        yaw = yawToTarget.getDegrees();
+    } catch (Exception e) {
+        yaw = -1;
+    }  
+    SmartDashboard.putNumber("Yawwwwl to target", yaw);
 }
 
 //Gets Pitch of best target Apriltag and displays
@@ -181,7 +198,7 @@ public void publishSkew() {
 public void publishPoseX() {
     double poseX = 0;
     try {
-        poseX = robotPoseEstimate.getX();
+        poseX = RobotPoseEstimate3d.getX();
     } catch (Exception e) {
         poseX = -1;
     }  
@@ -192,7 +209,7 @@ public void publishPoseX() {
 public void publishPoseY() {
     double poseY = 0;
     try {
-        poseY = robotPoseEstimate.getY();
+        poseY = RobotPoseEstimate3d.getY();
     } catch (Exception e) {
         poseY = -1;
     }  
@@ -248,15 +265,24 @@ public Command rumbleAtTarget(CommandXboxController ctrl) {
 private void getPose3d() {
         // Calculate robot's field relative pose
     if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-       robotPoseEstimate = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
+       RobotPoseEstimate3d = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
     }    
 }
 
-
-
-
-
-
+//extract 2d pose from 3d pose
+private void getPose2d() {
+    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) { 
+        try {
+            RobotPoseEstimate2d = RobotPoseEstimate3d.toPose2d();
+        } catch (Exception e) {
+            
+        }  
+    }  
 }
 
- 
+ private void getYawToBestTarget(){
+    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+        yawToTarget = PhotonUtils.getYawToPose(RobotPoseEstimate2d,aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().toPose2d());
+        }
+    }
+}

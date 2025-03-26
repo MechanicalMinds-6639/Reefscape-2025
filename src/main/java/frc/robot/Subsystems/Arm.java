@@ -50,7 +50,7 @@ public class Arm extends SubsystemBase {
             CraneConstants.ARM_KV,
             CraneConstants.ARM_KA);
             
-    private double ArmDegreeSetPoint = ArmEncoder.getPosition() *360/CraneConstants.ARM_REDUCTION;
+    private double ArmDegreeSetPoint = 0.0;
 
 
 
@@ -73,13 +73,17 @@ public class Arm extends SubsystemBase {
         if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
           //make if statement to go up if limit switch is pressed down and not allow down, 
           ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * CraneConstants.ARM_SETPOINT_MULTIPLIER;
-        } else if (CraneController.y().getAsBoolean()){
+        } else if (CraneController.x().getAsBoolean()){
             ArmDegreeSetPoint = CraneConstants.ARM_L3_DEGREE;
         } else if (CraneController.a().getAsBoolean()){
           ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_DEGREE;
+      }   else if (CraneController.y().getAsBoolean()){
+          ArmDegreeSetPoint = CraneConstants.ARM_L4_SCORING_ANGLE;
       }
 
        if (!Elbow.get()){
+        reachGoal(ArmDegreeSetPoint);
+       } else if (Elbow.get() && ArmDegreeSetPoint>0) {
         reachGoal(ArmDegreeSetPoint);
        } else {
         ArmMax.set(0);
@@ -88,6 +92,7 @@ public class Arm extends SubsystemBase {
 
        if (Elbow.get()){
         setZeroReferncePoint();
+        ArmDegreeSetPoint = 2;
       }
       });
 

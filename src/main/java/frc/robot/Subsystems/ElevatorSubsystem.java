@@ -92,11 +92,13 @@ public class ElevatorSubsystem extends SubsystemBase {
       if (Math.abs(HeightController.getLeftY()) > Operator.DEADBAND){
         //make if statement to go up if limit switch is pressed down and not allow down, 
         SetPointHeight = SetPointHeight - HeightController.getLeftY() * CraneConstants.ELEVATOR_SETPOINT_MULTIPLIER;
-      } else if (HeightController.y().getAsBoolean()){
+      } else if (HeightController.x().getAsBoolean()){
           SetPointHeight = CraneConstants.ELEVATOR_L3_HEIGHT;
       } else if (HeightController.a().getAsBoolean()){
         SetPointHeight = CraneConstants.ELEVATOR_CORAL_INTAKE_HEIGHT;
-    }
+      } else if (HeightController.y().getAsBoolean()){
+      SetPointHeight = CraneConstants.ELEVATOR_L4_HEIGHT;
+      }
 
       reachGoal(SetPointHeight);
     } else {
