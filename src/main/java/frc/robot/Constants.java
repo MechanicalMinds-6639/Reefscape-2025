@@ -69,10 +69,10 @@ public class Constants {
         public static final double ARM_KA = 0; //.21;
         public static final double ARM_KP = 0.6; //0.1;
         public static final double ARM_KS = 0;
-        public static final double ARM_L3_DEGREE = 40.0;
+        public static final double ARM_L3_DEGREE = 32.0;
         public static final double ARM_CORAL_INTAKE_DEGREE = 20.0;
-        public static final double ARM_SETPOINT_MULTIPLIER = -0.1;
-        public static final double ARM_L4_SCORING_ANGLE = 11;
+        public static final double ARM_SETPOINT_MULTIPLIER = -0.4;
+        public static final double ARM_L4_SCORING_ANGLE = 15;
 
         //Elevator Constants
         public static final double ELEVATOR_DRUM_RADIUS = 0.0222377; //pitch radius of that one gear on the elevator, yeah

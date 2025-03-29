@@ -104,7 +104,6 @@ public class Arm extends SubsystemBase {
 
     return run(() -> {
 
-      System.out.println("Arm Angle: " + getAngleAsDouble());
 
       if (Elbow.get()){
         setZeroReferncePoint();
@@ -193,6 +192,12 @@ public class Arm extends SubsystemBase {
     });
    }
 
+   public Command autoPID(double setPoint) {
+    return run (() -> {
+      ArmDegreeSetPoint = setPoint;
+      reachGoal(ArmDegreeSetPoint);
+    });
+   }
 
   public void setZeroReferncePoint(){
     ArmEncoder.setPosition(0);

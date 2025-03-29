@@ -44,7 +44,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem(File directory) {
 
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; //TODO LOWER THIS AT COMP, SLOWS COMPUTATION
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW; //TODO LOWER THIS AT COMP, SLOWS COMPUTATION
 
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.Drive.MAX_SPEED);
@@ -177,6 +177,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
+    swerveDrive.setMaximumAttainableSpeeds(rotation, rotation);
     swerveDrive.drive(translation, rotation, fieldRelative, false);
   }
 
@@ -238,3 +239,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getRobotVelocity();
   }
 }
+
+//Vision Commands
+
+//public Command aimAtTarget()

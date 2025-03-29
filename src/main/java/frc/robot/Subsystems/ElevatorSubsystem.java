@@ -4,18 +4,18 @@
 
 package frc.robot.Subsystems;
 
-import com.revrobotics.spark.SparkMax;
-import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu. wpi. first. math. trajectory. TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
 import frc.robot.Constants.Operator;
-import edu. wpi. first. math. trajectory. TrapezoidProfile.Constraints;
 
 public class ElevatorSubsystem extends SubsystemBase {
   // Members
@@ -177,6 +176,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     System.out.println("Elevator using PID control");
     elevatorMode = true;
   }
+
+  public Command autoPID(double setPoint) {
+    return run (() -> {
+      SetPointHeight = setPoint;
+      reachGoal(SetPointHeight);
+    });
+   }
 
   @Override
   public void periodic() {

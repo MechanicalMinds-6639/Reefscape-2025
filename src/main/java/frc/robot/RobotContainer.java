@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.CraneConstants;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.ElevatorSubsystem;
@@ -78,6 +79,10 @@ public class RobotContainer {
       .withTimeout(1));
     NamedCommands.registerCommand("Dumb Wrist Timeout", KCCWrist.SetWristSpeed(-0.1)
       .withTimeout(1).andThen(KCCWrist.SetWristSpeed(0).withTimeout(0.1)));
+    NamedCommands.registerCommand("L3 Arm Command", arm.autoPID(CraneConstants.ARM_L3_DEGREE)
+      .withTimeout(1));
+    NamedCommands.registerCommand("L3 Elevator Command", elevator.autoPID(CraneConstants.ELEVATOR_L3_HEIGHT)
+      .withTimeout(1));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -88,7 +93,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     //System.out.println("AJHKSDASHKASJHDHSAKJDHJKADHKJS");
-    Command rumbleAtTarget = photonVision.rumbleAtTarget(driverController);
+    Command updateTarget = photonVision.updateTarget(driverController);
 
     Command driveFieldOrientedDirectAngle = driveBase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAngularVelocity = driveBase.driveFieldOriented(driveAngularVelocity);
@@ -112,8 +117,8 @@ public class RobotContainer {
     copilotController.start().onTrue(Commands.runOnce(KCCWrist::setZeroReferncePoint));
     //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
-    //KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
-    photonVision.setDefaultCommand(rumbleAtTarget);  
+    KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
+    photonVision.setDefaultCommand(updateTarget);  
   
   }
 

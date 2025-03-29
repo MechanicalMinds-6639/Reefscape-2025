@@ -156,7 +156,7 @@ public void publishYawToBestTarget() {
         //yaw = target.getYaw();
         yaw = yawToTarget.getDegrees();
     } catch (Exception e) {
-        yaw = -1;
+        yaw = -999;
     }  
     SmartDashboard.putNumber("Yawwwwl to target", yaw);
 }
@@ -238,7 +238,7 @@ private boolean isBlueTarget(int tgt) {
  
 //Bind as default command for photonvision
 //Rumble controller if found target is on correct alliance side
-public Command rumbleAtTarget(CommandXboxController ctrl) {
+public Command updateTarget(CommandXboxController ctrl) {
     return run(() -> {
         boolean rumble = false;
         //Check for target presence
