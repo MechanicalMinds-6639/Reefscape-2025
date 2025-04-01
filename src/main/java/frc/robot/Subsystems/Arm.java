@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
 import frc.robot.Constants.Operator;
@@ -67,7 +68,7 @@ public class Arm extends SubsystemBase {
 
     public Command RunArm(CommandXboxController CraneController){
 
-      return run (() -> {
+      return new WaitCommand(1).andThen(run (() -> {
 
 
         if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
@@ -94,7 +95,7 @@ public class Arm extends SubsystemBase {
         setZeroReferncePoint();
         ArmDegreeSetPoint = 2;
       }
-      });
+      }));
 
     }
 
@@ -163,7 +164,6 @@ public class Arm extends SubsystemBase {
           ArmFeedforward.calculate(ArmController.getSetpoint().position, ArmController.getSetpoint().velocity)
             + ArmController.calculate(ArmEncoder.getPosition(), goal), -7, 7);
         ArmMax.setVoltage(clampedValue);
-        System.out.println(clampedValue);
     }
 
     public Command setGoal(double goalDegrees) {

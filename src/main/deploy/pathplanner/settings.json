@@ -4,9 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "Basic Mid Auto",
-    "Bottom Score",
-    "Tiny Moves",
-    "Top Score"
+    "Side Score",
+    "L3 Score",
+    "Tiny Moves"
   ],
   "autoFolders": [],
   "defaultMaxVel": 1.0,

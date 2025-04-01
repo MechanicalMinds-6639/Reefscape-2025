@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid L3 Score Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3 Elevator Command"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3 Arm Command"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "90 Degree Wrist Command"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

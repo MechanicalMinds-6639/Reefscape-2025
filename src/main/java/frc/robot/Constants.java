@@ -65,9 +65,9 @@ public class Constants {
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 0; //4.01;
-        public static final double ARM_KV = 0.25; //.39;
+        public static final double ARM_KV = 0.4; //.25;
         public static final double ARM_KA = 0; //.21;
-        public static final double ARM_KP = 0.6; //0.1;
+        public static final double ARM_KP = 0.6;
         public static final double ARM_KS = 0;
         public static final double ARM_L3_DEGREE = 32.0;
         public static final double ARM_CORAL_INTAKE_DEGREE = 20.0;
@@ -105,7 +105,7 @@ public class Constants {
 
     public static final class ClimbConstants {
         // TODO Set IDS
-        public static final int CLIMB_MOTOR_ID = 10;
+        public static final int CLIMB_MOTOR_ID = 30;
         public static final double CLIMBER_SPEED = 0.75;
 
     }
