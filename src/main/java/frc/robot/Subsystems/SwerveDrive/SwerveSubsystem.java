@@ -14,12 +14,14 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -238,8 +240,44 @@ public class SwerveSubsystem extends SubsystemBase {
   public ChassisSpeeds getRobotVelocity() {
     return swerveDrive.getRobotVelocity();
   }
-}
+
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY) {
+    Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
+    return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
+                                                        scaledInputs.getY(),
+                                                        headingX, 
+                                                        headingY,
+                                                        getHeading().getRadians(),
+                                                        Constants.Drive.MAX_SPEED);
+  }
+
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
+    Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
+
+    return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
+                                                        scaledInputs.getY(), 
+                                                        angle.getRadians(),
+                                                        getHeading().getRadians(),
+                                                        Constants.Drive.MAX_SPEED);
+  }
+
+  public Command driveToPose(Pose2d pose) {
+    PathConstraints constraints = new PathConstraints(
+      swerveDrive.getMaximumChassisVelocity(), 4.0, 
+      swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
+    
+    return AutoBuilder.pathfindToPose(pose, constraints, edu.wpi.first.units.Units.MetersPerSecond.of(0));
+  }
 
 //Vision Commands
 
-//public Command aimAtTarget()
+  public Command aimAtTarget(boolean hasTargets, double yaw) {
+
+    return run(() -> {
+      if (hasTargets) {
+        drive(getTargetSpeeds(0, 0, Rotation2d.fromDegrees(yaw)));
+      }
+    });
+  }
+
+}

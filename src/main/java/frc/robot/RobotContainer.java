@@ -117,6 +117,7 @@ public class RobotContainer {
     copilotController.start().onTrue(Commands.runOnce(KCCWrist::setZeroReferncePoint));
     //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
+    driverController.b().whileTrue(driveBase.aimAtTarget(photonVision.hasTarget(), photonVision.yawToTarget()));
     KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
     photonVision.setDefaultCommand(updateTarget);  
   
