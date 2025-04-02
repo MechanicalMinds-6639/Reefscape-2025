@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 
-public class VisionSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase{
 
     PhotonCamera camera = new PhotonCamera("VisionCamera");
     PhotonTrackedTarget target = new PhotonTrackedTarget();
@@ -58,43 +58,43 @@ public class VisionSubsystem extends SubsystemBase {
  }
  processStep step = processStep.kGetResult;
 
-    @Override
-    public void periodic(){
-        if (camera.isConnected()) {
-            switch(step) {
-                case kGetResult:
-                    if (getCameraResult()) {
-                        step = processStep.kGetTarget;                        
-                    }
-                    break;
-
-                case kGetTarget:
-                    if (getTarget()) {
-                        step = processStep.kGetPoseInfo;
-                    } else {step = processStep.kGetResult;}
-                    break;
-
-                case kGetPoseInfo:
-                    getPose3d();
-                    getPose2d();
-                    getYawToBestTarget();
-                    step = processStep.kPublishResults;
-                    break;
-
-                case kPublishResults:
-                    publishFiducialID();
-                    publishYaw();
-                    publishYawToBestTarget();
-                    publishPitch();
-                    publishArea();
-                    publishSkew();
-                    publishPoseX();
-                    publishPoseY();
-                    step = processStep.kGetResult;
-                    break;
+ @Override
+ public void periodic() {
+    if (camera.isConnected()) {
+        switch(step) {
+            case kGetResult:
+                if (getCameraResult()) {
+                    step = processStep.kGetTarget;                        
                 }
-        }
-}
+                break;
+
+            case kGetTarget:
+                if (getTarget()) {
+                    step = processStep.kGetPoseInfo;
+                } else {step = processStep.kGetResult;}
+                break;
+
+            case kGetPoseInfo:
+                getPose3d();
+                getPose2d();
+                getYawToBestTarget();
+                step = processStep.kPublishResults;
+                break;
+
+            case kPublishResults:
+                publishFiducialID();
+                publishYaw();
+                publishYawToBestTarget();
+                publishPitch();
+                publishArea();
+                publishSkew();
+                publishPoseX();
+                publishPoseY();
+                step = processStep.kGetResult;
+                break;
+            }
+    }
+ }
 
 private boolean getCameraResult() {
     try {
