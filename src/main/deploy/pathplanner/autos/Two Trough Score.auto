@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid L3 Score Path"
+            "pathName": "Right Score"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "L3 Arm Command"
+            "pathName": "Right to Coral Station"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "L3 Elevator Command"
+            "pathName": "Coral Station to Back Right Score"
           }
         }
       ]

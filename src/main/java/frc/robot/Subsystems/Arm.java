@@ -4,6 +4,10 @@
 
 package frc.robot.Subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Minute;
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -26,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CraneConstants;
 import frc.robot.Constants.Operator;
-import static edu.wpi.first.units.Units.*;
 
 
 
@@ -53,6 +56,8 @@ public class Arm extends SubsystemBase {
             
     private double ArmDegreeSetPoint = 0.0;
 
+    private double Multiplier = CraneConstants.ARM_SETPOINT_MULTIPLIER;
+
 
 
   /** Creates a new Arm. */
@@ -73,13 +78,19 @@ public class Arm extends SubsystemBase {
 
         if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
           //make if statement to go up if limit switch is pressed down and not allow down, 
-          ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * CraneConstants.ARM_SETPOINT_MULTIPLIER;
+          ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * Multiplier;
         } else if (CraneController.x().getAsBoolean()){
             ArmDegreeSetPoint = CraneConstants.ARM_L3_DEGREE;
         } else if (CraneController.a().getAsBoolean()){
           ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_DEGREE;
       }   else if (CraneController.y().getAsBoolean()){
           ArmDegreeSetPoint = CraneConstants.ARM_L4_SCORING_ANGLE;
+      }
+
+      if (CraneController.povUp().getAsBoolean()){
+        Multiplier = CraneConstants.ARM_TURBO_SETPOINT_MULTIPLIER;
+      } else if (CraneController.povRight().getAsBoolean()){
+        Multiplier = CraneConstants.ARM_SETPOINT_MULTIPLIER;
       }
 
        if (!Elbow.get()){
@@ -206,7 +217,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+    System.out.println(ArmDegreeSetPoint);
     SmartDashboard.putNumber("Arm Setpoint", ArmController.getSetpoint().position);
     SmartDashboard.putNumber("Arm Position", getRotations());
   }
