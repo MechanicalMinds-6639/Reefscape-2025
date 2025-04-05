@@ -7,25 +7,25 @@
         {
           "type": "named",
           "data": {
-            "name": "L3 Arm Command"
+            "name": "L3/L4 Arm Command"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L3 Elevator Command"
+            "name": "L4 Elevator Command"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Mid L3 Score Path"
+            "pathName": "Mid L4 Score Path"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L3 Arm Lower"
+            "name": "L3/L4 Arm Lower"
           }
         },
         {

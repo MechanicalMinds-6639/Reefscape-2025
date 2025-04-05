@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 16.183892045454545,
-        "y": 1.103323863636365
+        "x": 11.755,
+        "y": 3.84
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.544318181818182,
-        "y": 1.6567550505050497
+        "x": 11.505,
+        "y": 3.84
       },
       "isLocked": false,
-      "linkedName": "Right Coral Station Waypoint"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 13.887563131313131,
-        "y": 2.815467171717172
+        "x": 11.1,
+        "y": 3.845
       },
       "prevControl": {
-        "x": 14.069914772727273,
-        "y": 2.539232954545454
+        "x": 11.35,
+        "y": 3.845
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -58.337
+    "velocity": 0.0,
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Side Score",
+  "folder": "L3-L4 Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.63980919808662
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -73,7 +73,7 @@ public class Constants {
         public static final double ARM_L3_DEGREE = 32.0;
         public static final double ARM_CORAL_INTAKE_DEGREE = 22.0;
         public static final double ARM_SETPOINT_MULTIPLIER = -0.55;
-        public static final double ARM_TURBO_SETPOINT_MULTIPLIER = -0.7;
+        public static final double ARM_TURBO_SETPOINT_MULTIPLIER = -0.85;
         public static final double ARM_L4_SCORING_ANGLE = 15;
 
         //Elevator Constants
@@ -108,7 +108,7 @@ public class Constants {
     public static final class ClimbConstants {
         // TODO Set IDS
         public static final int CLIMB_MOTOR_ID = 30;
-        public static final double CLIMBER_SPEED = 0.75;
+        public static final double CLIMBER_SPEED = 1.0;
 
     }
 }

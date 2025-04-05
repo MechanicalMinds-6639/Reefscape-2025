@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.25,
-        "y": 2.775
+        "x": 12.32,
+        "y": 2.77
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.803522727272728,
-        "y": 2.489375
+        "x": 12.873522727272729,
+        "y": 2.484375
       },
       "isLocked": false,
       "linkedName": "Right Score Endpoint Waypoint"
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 16.36066874075118,
-        "y": 0.9265471683397272
+        "y": 0.9265471683397273
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -55.6196552761553
+    "rotation": 125.63980919808662
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Side Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -118.98006493354237
+    "rotation": -119.0
   },
   "useDefaultConstraints": true
 }

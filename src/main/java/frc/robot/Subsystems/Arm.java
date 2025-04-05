@@ -87,11 +87,11 @@ public class Arm extends SubsystemBase {
           ArmDegreeSetPoint = CraneConstants.ARM_L4_SCORING_ANGLE;
       }
 
-      if (CraneController.povUp().getAsBoolean()){
-        Multiplier = CraneConstants.ARM_TURBO_SETPOINT_MULTIPLIER;
-      } else if (CraneController.povRight().getAsBoolean()){
-        Multiplier = CraneConstants.ARM_SETPOINT_MULTIPLIER;
-      }
+       if (CraneController.povUp().getAsBoolean()){
+         Multiplier = CraneConstants.ARM_TURBO_SETPOINT_MULTIPLIER;
+       } else if (CraneController.povRight().getAsBoolean()){
+         Multiplier = CraneConstants.ARM_SETPOINT_MULTIPLIER;
+       }
 
        if (!Elbow.get()){
         reachGoal(ArmDegreeSetPoint);
@@ -217,7 +217,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(ArmDegreeSetPoint);
+    //System.out.println(ArmDegreeSetPoint);
     SmartDashboard.putNumber("Arm Setpoint", ArmController.getSetpoint().position);
     SmartDashboard.putNumber("Arm Position", getRotations());
   }

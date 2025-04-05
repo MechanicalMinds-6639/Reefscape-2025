@@ -79,10 +79,18 @@ public class RobotContainer {
       .withTimeout(1));
     NamedCommands.registerCommand("Dumb Wrist Timeout", KCCWrist.SetWristSpeed(-0.1)
       .withTimeout(1).andThen(KCCWrist.SetWristSpeed(0).withTimeout(0.1)));
-    NamedCommands.registerCommand("L3 Arm Command", arm.autoPID(CraneConstants.ARM_L3_DEGREE)
+    NamedCommands.registerCommand("L3/L4 Arm Command", arm.autoPID(15)
       .withTimeout(1));
-    NamedCommands.registerCommand("L3 Elevator Command", elevator.autoPID(CraneConstants.ELEVATOR_L3_HEIGHT)
-      .withTimeout(1));
+    NamedCommands.registerCommand("L3 Elevator Command", elevator.autoPID(0.305)
+      .withTimeout(2));
+    NamedCommands.registerCommand("L3/L4 Arm Lower", arm.autoPID(50)
+      .withTimeout(2));
+    NamedCommands.registerCommand("L4 Elevator Command", elevator.autoPID(0.55)
+      .withTimeout(2));
+    NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_DEGREE)
+      .withTimeout(1.5));
+    NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
+      .withTimeout(3));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 

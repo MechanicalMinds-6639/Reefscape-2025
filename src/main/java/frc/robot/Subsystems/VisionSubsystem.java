@@ -1,4 +1,5 @@
 package frc.robot.Subsystems;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,52 +36,61 @@ public class VisionSubsystem extends SubsystemBase {
     PhotonCamera camera = new PhotonCamera("VisionCamera");
     PhotonTrackedTarget target = new PhotonTrackedTarget();
     Rotation3d pRotation3d = new Rotation3d();
-    Transform3d pCameraToRobot = new Transform3d(-0.216, -0.220, 0.505, pRotation3d);  
-    //Transform3d pCameraToRobot = new Transform3d();
+    Transform3d pCameraToRobot = new Transform3d(-0.216, -0.220, 0.505, pRotation3d);
+    // Transform3d pCameraToRobot = new Transform3d();
     Pose3d RobotPoseEstimate3d = new Pose3d();
     Pose2d RobotPoseEstimate2d = new Pose2d();
     PhotonPipelineResult camResult = new PhotonPipelineResult();
     Rotation2d yawToTarget = new Rotation2d();
 
-    //List target IDs for red alliance
-    int[] redTargetIDs = {1,2,6,7,8,9,10,11};
+    private enum Alliance {
+        BLUE, RED
+    }
 
-    //List target IDs for blue alliance
-    int[] blueTargetIDs = {12,13,17,18,19,20,21,22};
+    // List target IDs for red alliance
+    List<Integer> redTargetIDs = List.of(1, 2, 6, 7, 8, 9, 10, 11);
 
-// The field from AprilTagFields will be different depending on the game.
- public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
- 
- //Processing steps in periodic - intent is to distribute processing steps across several scans
- private enum processStep {
-    kGetResult,
-    kGetTarget,
-    kGetPoseInfo,
-    kPublishResults
- }
- processStep step = processStep.kGetResult;
+    // List target IDs for blue alliance
+    List<Integer> blueTargetIDs = List.of(12, 13, 17, 18, 19, 20, 21, 22);
+
+    // The field from AprilTagFields will be different depending on the game.
+    public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout
+            .loadField(AprilTagFields.kDefaultField);
+
+    // Processing steps in periodic - intent is to distribute processing steps
+    // across several scans
+    private enum ProcessStep {
+        kGetResult,
+        kGetTarget,
+        kGetPoseInfo,
+        kPublishResults
+    }
+
+    ProcessStep step = ProcessStep.kGetResult;
 
     @Override
-    public void periodic(){
+    public void periodic() {
         if (camera.isConnected()) {
-            switch(step) {
+            switch (step) {
                 case kGetResult:
                     if (getCameraResult()) {
-                        step = processStep.kGetTarget;                        
+                        step = ProcessStep.kGetTarget;
                     }
                     break;
 
                 case kGetTarget:
                     if (getTarget()) {
-                        step = processStep.kGetPoseInfo;
-                    } else {step = processStep.kGetResult;}
+                        step = ProcessStep.kGetPoseInfo;
+                    } else {
+                        step = ProcessStep.kGetResult;
+                    }
                     break;
 
                 case kGetPoseInfo:
                     getPose3d();
                     getPose2d();
-                    getYawToBestTarget();
-                    step = processStep.kPublishResults;
+                    // getYawToBestTarget();
+                    step = ProcessStep.kPublishResults;
                     break;
 
                 case kPublishResults:
@@ -90,199 +102,220 @@ public class VisionSubsystem extends SubsystemBase {
                     publishSkew();
                     publishPoseX();
                     publishPoseY();
-                    step = processStep.kGetResult;
+                    step = ProcessStep.kGetResult;
                     break;
-                }
-        }
-}
-
-private boolean getCameraResult() {
-    try {
-        camResult = camera.getAllUnreadResults().get(0);
-        return true;
-    } catch (Exception e){
-        return false;  
-    }
-}
-
-public boolean hasTarget() {
-    // Check if the latest result has any targets. 
-    return camResult.hasTargets();    
-}
-
-private boolean getTarget() {
-    if (hasTarget()) {
-        target = camResult.getBestTarget();
-        return true;
-    } else {return false;}
-}
-
-public double yawToTarget(){
-    try {
-        return target.getYaw();
-    } catch (Exception e) {
-        return 0;
-    }  
-}
-
-
-//Gets ID of best target Apriltag and displays
-public void publishFiducialID() {
-    double FiducialID = 0;
-    try {
-        FiducialID = target.getFiducialId();
-    } catch (Exception e) {
-        FiducialID = -1;
-    }  
-    SmartDashboard.putNumber("FiducialID", FiducialID);
-}
-
-//Gets Yaw of best target Apriltag and displays
-public void publishYaw() {
-    double yaw = 0;
-    try {
-        //yaw = target.getYaw();
-        yaw = RobotPoseEstimate3d.getRotation().getAngle();
-    } catch (Exception e) {
-        yaw = -1;
-    }  
-    SmartDashboard.putNumber("Yawwwwl", yaw);
-}
-
-//Publish Yaw to best target
-public void publishYawToBestTarget() {
-    double yaw = 0;
-    try {
-        //yaw = target.getYaw();
-        yaw = yawToTarget.getDegrees();
-    } catch (Exception e) {
-        yaw = -999;
-    }  
-    SmartDashboard.putNumber("Yawwwwl to target", yaw);
-}
-
-//Gets Pitch of best target Apriltag and displays
-public void publishPitch() {
-    double pitch = 0;
-    try {
-        pitch = target.getPitch();
-    } catch (Exception e) {
-        pitch = -1;
-    }  
-     SmartDashboard.putNumber("Pitch", pitch);
-}
-
-//Gets Area of best target Apriltag and displays
-public void publishArea() {
-    double area = 0;
-    try {
-        area = target.getArea();
-    } catch (Exception e) {
-        area = -1;
-    }  
-     SmartDashboard.putNumber("Area", area);
-}
-
-//Gets Skew of best target Apriltag and displays
-public void publishSkew() {
-    double skew = 0;
-    try {
-        skew = target.getSkew();
-    } catch (Exception e) {
-        skew = -1;
-    }  
-    SmartDashboard.putNumber("Skew", skew);
-}
-
-//Gets PoseX of best target Apriltag and displays
-public void publishPoseX() {
-    double poseX = 0;
-    try {
-        poseX = RobotPoseEstimate3d.getX();
-    } catch (Exception e) {
-        poseX = -1;
-    }  
-    SmartDashboard.putNumber("PoseX", poseX);
-}
-
-//Gets PoseY of best target Apriltag and displays
-public void publishPoseY() {
-    double poseY = 0;
-    try {
-        poseY = RobotPoseEstimate3d.getY();
-    } catch (Exception e) {
-        poseY = -1;
-    }  
-    SmartDashboard.putNumber("PoseY", poseY);
-}
-
-private boolean isRedTarget(int tgt) {
-    boolean tgtFound = false;
-    for (int t : redTargetIDs) {
-        if (t == tgt) {
-            tgtFound =  true;
-        }
-    }
-    return tgtFound;
-}
-
-private boolean isBlueTarget(int tgt) {
-    boolean tgtFound = false;
-    for (int t : blueTargetIDs) {
-        if (t == tgt) {
-            tgtFound =  true;
-        }
-    }
-    return tgtFound;
-}
- 
-//Bind as default command for photonvision
-//Rumble controller if found target is on correct alliance side
-public Command updateTarget(CommandXboxController ctrl) {
-    return run(() -> {
-        boolean rumble = false;
-        //Check for target presence
-        if (hasTarget()) {
-            //check whether red or blue alliance
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                //Check if found target belongs to red side of field
-                if (isRedTarget(target.getFiducialId())) {
-                    rumble = true;
-                }
-            } else {
-                //Check if found target belongs to blue side of field
-                if (isBlueTarget(target.getFiducialId())) {
-                    rumble = true;
-                }
             }
-
         }
-        //camera.setDriverMode(true);
-        ctrl.setRumble(RumbleType.kBothRumble, (rumble ? 0.3 : 0.0));
-    });
-}
- 
-private void getPose3d() {
-        // Calculate robot's field relative pose
-    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-       RobotPoseEstimate3d = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
-    }    
-}
+    }
 
-//extract 2d pose from 3d pose
-private void getPose2d() {
-    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) { 
+    private boolean getCameraResult() {
         try {
-            RobotPoseEstimate2d = RobotPoseEstimate3d.toPose2d();
+            camResult = camera.getAllUnreadResults().get(0);
+            return true;
         } catch (Exception e) {
-            
-        }  
-    }  
-}
-
- private void getYawToBestTarget(){
-    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-        yawToTarget = PhotonUtils.getYawToPose(RobotPoseEstimate2d,aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().toPose2d());
+            return false;
         }
+    }
+
+    public boolean hasTarget() {
+        // Check if the latest result has any targets.
+        return camResult.hasTargets();
+    }
+
+    private boolean getTarget() {
+        if (hasTarget()) {
+            target = camResult.getBestTarget();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public double yawToTarget() {
+        try {
+            return target.getYaw();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    // Gets ID of best target Apriltag and displays
+    public void publishFiducialID() {
+        double FiducialID = 0;
+        try {
+            FiducialID = target.getFiducialId();
+        } catch (Exception e) {
+            FiducialID = -1;
+        }
+        SmartDashboard.putNumber("FiducialID", FiducialID);
+    }
+
+    // Gets Yaw of best target Apriltag and displays
+    public void publishYaw() {
+        double yaw = 0;
+        try {
+            // yaw = target.getYaw();
+            yaw = RobotPoseEstimate3d.getRotation().getAngle();
+        } catch (Exception e) {
+            yaw = -1;
+        }
+        SmartDashboard.putNumber("Yawwwwl", yaw);
+    }
+
+    // Publish Yaw to best target
+    public void publishYawToBestTarget() {
+        double yaw = 0;
+        try {
+            // yaw = target.getYaw();
+            yaw = yawToTarget.getDegrees();
+        } catch (Exception e) {
+            yaw = -999;
+        }
+        SmartDashboard.putNumber("Yawwwwl to target", yaw);
+    }
+
+    // Gets Pitch of best target Apriltag and displays
+    public void publishPitch() {
+        double pitch = 0;
+        try {
+            pitch = target.getPitch();
+        } catch (Exception e) {
+            pitch = -1;
+        }
+        SmartDashboard.putNumber("Pitch", pitch);
+    }
+
+    // Gets Area of best target Apriltag and displays
+    public void publishArea() {
+        double area = 0;
+        try {
+            area = target.getArea();
+        } catch (Exception e) {
+            area = -1;
+        }
+        SmartDashboard.putNumber("Area", area);
+    }
+
+    // Gets Skew of best target Apriltag and displays
+    public void publishSkew() {
+        double skew = 0;
+        try {
+            skew = target.getSkew();
+        } catch (Exception e) {
+            skew = -1;
+        }
+        SmartDashboard.putNumber("Skew", skew);
+    }
+
+    // Gets PoseX of best target Apriltag and displays
+    public void publishPoseX() {
+        double poseX = 0;
+        try {
+            poseX = RobotPoseEstimate3d.getX();
+        } catch (Exception e) {
+            poseX = -1;
+        }
+        SmartDashboard.putNumber("PoseX", poseX);
+    }
+
+    // Gets PoseY of best target Apriltag and displays
+    public void publishPoseY() {
+        double poseY = 0;
+        try {
+            poseY = RobotPoseEstimate3d.getY();
+        } catch (Exception e) {
+            poseY = -1;
+        }
+        SmartDashboard.putNumber("PoseY", poseY);
+    }
+
+    private boolean isRedTarget(int tgt) {
+        boolean tgtFound = false;
+        for (int t : redTargetIDs) {
+            if (t == tgt) {
+                tgtFound = true;
+            }
+        }
+        return tgtFound;
+    }
+
+    private boolean isBlueTarget(int tgt) {
+        boolean tgtFound = false;
+        for (int t : blueTargetIDs) {
+            if (t == tgt) {
+                tgtFound = true;
+            }
+        }
+        return tgtFound;
+    }
+
+    // unused, for reference 
+    private Alliance getTargetAlliance(int target) {
+        if (redTargetIDs.contains(target)) return Alliance.RED;
+        else if (blueTargetIDs.contains(target)) return Alliance.BLUE;
+        else throw new IllegalArgumentException("Invalid target ID");
+    }
+
+    // Bind as default command for photonvision
+    // Rumble controller if found target is on correct alliance side
+    public Command updateTarget(CommandXboxController ctrl) {
+        return run(() -> {
+            boolean rumble = false;
+            // Check for target presence
+            if (hasTarget()) {
+                // check whether red or blue alliance
+                if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                    // Check if found target belongs to red side of field
+                    if (isRedTarget(target.getFiducialId())) {
+                        rumble = true;
+                    }
+                } else {
+                    // Check if found target belongs to blue side of field
+                    if (isBlueTarget(target.getFiducialId())) {
+                        rumble = true;
+                    }
+                }
+
+            }
+            // camera.setDriverMode(true);
+            ctrl.setRumble(RumbleType.kBothRumble, (rumble ? 0.3 : 0.0));
+        });
+    }
+
+    private double getDistanceToTarget(PhotonTrackedTarget target) {
+        return PhotonUtils.calculateDistanceToTargetMeters(.505, .3, 
+                Units.degreesToRadians(-10d), Units.degreesToRadians(target.getPitch()));
+    }
+
+    private Translation2d getTranslationToTarget(PhotonTrackedTarget target) throws IllegalStateException {
+        return PhotonUtils.estimateCameraToTargetTranslation(getDistanceToTarget(target), getYawToTarget(target));
+    }
+
+    private void getPose3d() {
+        // Calculate robot's field relative pose
+        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+            RobotPoseEstimate3d = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+                    aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), pCameraToRobot);
+        }
+    }
+
+    // extract 2d pose from 3d pose
+    private void getPose2d() {
+        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+            try {
+                RobotPoseEstimate2d = RobotPoseEstimate3d.toPose2d();
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private Rotation2d getYawToTarget(PhotonTrackedTarget target) {
+        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+            return PhotonUtils.getYawToPose(RobotPoseEstimate2d,
+                    aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().toPose2d());
+        }
+
+        throw new IllegalStateException();
     }
 }
