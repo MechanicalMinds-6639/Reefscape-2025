@@ -177,7 +177,8 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-    swerveDrive.setMaximumAttainableSpeeds(rotation, rotation);
+    swerveDrive.setMaximumAttainableSpeeds(swerveDrive.getMaximumChassisVelocity(), 
+                                            swerveDrive.getMaximumChassisAngularVelocity());
     swerveDrive.drive(translation, rotation, fieldRelative, false);
   }
 

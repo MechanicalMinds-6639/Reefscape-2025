@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     
     //m_robotContainer.resetElevator();
   }
-
+/* 
   @Override
   public void autonomousInit() {
     m_robotContainer.resetGyro();
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
-
+*/
   @Override
   public void autonomousPeriodic() {}
 

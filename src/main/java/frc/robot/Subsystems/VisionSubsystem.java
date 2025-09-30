@@ -70,50 +70,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (camera.isConnected()) {
-            switch (step) {
-                case kGetResult:
-                    if (getCameraResult()) {
-                        step = ProcessStep.kGetTarget;
-                    }
-                    break;
-
-                case kGetTarget:
-                    if (getTarget()) {
-                        step = ProcessStep.kGetPoseInfo;
-                    } else {
-                        step = ProcessStep.kGetResult;
-                    }
-                    break;
-
-                case kGetPoseInfo:
-                    getPose3d();
-                    getPose2d();
-                    // getYawToBestTarget();
-                    step = ProcessStep.kPublishResults;
-                    break;
-
-                case kPublishResults:
-                    publishFiducialID();
-                    publishYaw();
-                    publishYawToBestTarget();
-                    publishPitch();
-                    publishArea();
-                    publishSkew();
-                    publishPoseX();
-                    publishPoseY();
-                    step = ProcessStep.kGetResult;
-                    break;
-            }
-        }
-    }
-
-    private boolean getCameraResult() {
-        try {
-            camResult = camera.getAllUnreadResults().get(0);
-            return true;
-        } catch (Exception e) {
-            return false;
+        List<PhotonPipelineResult> results = camera.getAllUnreadResults();
+        if (results.size() > 0) {
+            camResult = results.get(results.size() - 1);
         }
     }
 
@@ -122,13 +81,8 @@ public class VisionSubsystem extends SubsystemBase {
         return camResult.hasTargets();
     }
 
-    private boolean getTarget() {
-        if (hasTarget()) {
-            target = camResult.getBestTarget();
-            return true;
-        } else {
-            return false;
-        }
+    public List<PhotonTrackedTarget> getTrackedTargets() {
+        return camResult.getTargets();
     }
 
     public double yawToTarget() {
@@ -249,11 +203,14 @@ public class VisionSubsystem extends SubsystemBase {
         return tgtFound;
     }
 
-    // unused, for reference 
+    // unused, for reference
     private Alliance getTargetAlliance(int target) {
-        if (redTargetIDs.contains(target)) return Alliance.RED;
-        else if (blueTargetIDs.contains(target)) return Alliance.BLUE;
-        else throw new IllegalArgumentException("Invalid target ID");
+        if (redTargetIDs.contains(target))
+            return Alliance.RED;
+        else if (blueTargetIDs.contains(target))
+            return Alliance.BLUE;
+        else
+            throw new IllegalArgumentException("Invalid target ID");
     }
 
     // Bind as default command for photonvision
@@ -283,11 +240,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     private double getDistanceToTarget(PhotonTrackedTarget target) {
-        return PhotonUtils.calculateDistanceToTargetMeters(.505, .3, 
+        return PhotonUtils.calculateDistanceToTargetMeters(.505, .3,
                 Units.degreesToRadians(-10d), Units.degreesToRadians(target.getPitch()));
     }
 
-    private Translation2d getTranslationToTarget(PhotonTrackedTarget target) throws IllegalStateException {
+    public Translation2d getTranslationToTarget(PhotonTrackedTarget target) throws IllegalStateException {
         return PhotonUtils.estimateCameraToTargetTranslation(getDistanceToTarget(target), getYawToTarget(target));
     }
 
@@ -317,5 +274,22 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         throw new IllegalStateException();
+    }
+
+    public PhotonTrackedTarget getPerfferedTarget(int prefferedTargetID) {
+        if (!hasTarget()) {
+            return null;
+        }
+
+        List<PhotonTrackedTarget> targets = getTrackedTargets();
+        List<PhotonTrackedTarget> validTargets = targets.stream()
+                .filter(t -> t.getFiducialId() == 10 || t.getFiducialId() == 21).toList();
+
+        PhotonTrackedTarget prefferedTarget = validTargets.stream()
+                .filter(t -> t.getFiducialId() == prefferedTargetID)
+                .findFirst()
+                .orElse(null);
+
+        return prefferedTarget;
     }
 }

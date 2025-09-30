@@ -28,6 +28,8 @@ import frc.robot.Subsystems.Grabber;
 import frc.robot.Subsystems.VisionSubsystem;
 import frc.robot.Subsystems.Wrist;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
+import frc.robot.commands.DriveToTargetCommand;
+
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -41,6 +43,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Climber climber = new Climber();
   private final VisionSubsystem photonVision = new VisionSubsystem();
+  private final DriveToTargetCommand driveToTarget = new DriveToTargetCommand(photonVision, driveBase, 0);
   
 
   private final SendableChooser<Command> autoChooser;
@@ -66,6 +69,7 @@ public class RobotContainer {
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true); // YOU CAN DO THIS?>>???????
 
+     
     NamedCommands.registerCommand("Dumb Wrist Command", KCCWrist.autoWristCommand(90)
       .withTimeout(2));
     NamedCommands.registerCommand("Dumb Arm Command", arm.autoArmCommand(2.75)
@@ -91,10 +95,12 @@ public class RobotContainer {
       .withTimeout(1.5));
     NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
       .withTimeout(3));
-
+    
     autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.addOption("Test Vision Auto", new DriveToTargetCommand(photonVision, driveBase, 21));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    
   }
 
   
@@ -126,7 +132,8 @@ public class RobotContainer {
     //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
     KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
-    photonVision.setDefaultCommand(updateTarget);  
+    photonVision.setDefaultCommand(updateTarget);
+      
   
   }
 

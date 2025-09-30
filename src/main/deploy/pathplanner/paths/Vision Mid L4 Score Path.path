@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.32,
-        "y": 2.77
+        "x": 10.41,
+        "y": 3.975
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.073361274620579,
-        "y": 2.2533253468474723
+        "x": 10.150882097448823,
+        "y": 3.975
       },
       "isLocked": false,
-      "linkedName": "Right Score Endpoint Waypoint"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 16.183892045454545,
-        "y": 1.103323863636365
+        "x": 11.5,
+        "y": 3.83
       },
       "prevControl": {
-        "x": 16.48191434130838,
-        "y": 1.0173180379351394
+        "x": 10.499999999999998,
+        "y": 3.83
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Coral Station Waypoint"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 125.63980919808662
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Side Score",
+  "folder": "L3-L4 Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
