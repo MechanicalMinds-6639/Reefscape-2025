@@ -116,7 +116,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorLMax.set(-ElevatorSpeed * CraneConstants.ELEVATOR_MULTIPLIER);
       }
     }
-        
+       
+      if (ElevatorTop.get()){
+        System.out.println("Top");
+      }
+
     });
   
     

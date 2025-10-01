@@ -50,9 +50,7 @@ public class Arm extends SubsystemBase {
             CraneConstants.ARM_KV,
             CraneConstants.ARM_KA);
             
-    private double ArmDegreeSetPoint = ArmEncoder.getPosition() *360/CraneConstants.ARM_REDUCTION;
-
-
+    private double ArmDegreeSetPoint = 0;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -60,9 +58,7 @@ public class Arm extends SubsystemBase {
     // Sets PID in Arm Config
     SparkMaxConfig ArmConfig = new SparkMaxConfig();
     ArmConfig.smartCurrentLimit(40);
-    ArmMax.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    ArmDegreeSetPoint = ArmEncoder.getPosition() *360/CraneConstants.ARM_REDUCTION;
-
+    ArmMax.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
   }
 
     public Command RunArm(CommandXboxController CraneController){
@@ -78,17 +74,22 @@ public class Arm extends SubsystemBase {
         } else if (CraneController.a().getAsBoolean()){
           ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_DEGREE;
       }
+      
+      if (Elbow.get()){
+        setZeroReferncePoint();
+        ArmDegreeSetPoint = 2;
+      }
 
        if (!Elbow.get()){
+        reachGoal(ArmDegreeSetPoint);
+       } else if (Elbow.get() && ArmDegreeSetPoint>0) {
         reachGoal(ArmDegreeSetPoint);
        } else {
         ArmMax.set(0);
        }
 
 
-       if (Elbow.get()){
-        setZeroReferncePoint();
-      }
+       
       });
 
     }
