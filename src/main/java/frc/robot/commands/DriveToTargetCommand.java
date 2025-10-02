@@ -55,4 +55,9 @@ public class DriveToTargetCommand extends Command {
     public boolean isFinished() {
         return false;
     }
+
+    public static void setDefaultCommand(Object driveToTargetCommand) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
+    }
 }

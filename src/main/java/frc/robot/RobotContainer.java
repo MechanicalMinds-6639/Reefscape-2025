@@ -92,7 +92,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Elevator Command", elevator.autoPID(0.55)
       .withTimeout(2));
     NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_DEGREE)
-      .withTimeout(1.5));
+      .withTimeout(1.5)); 
     NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
       .withTimeout(3));
     
@@ -133,11 +133,11 @@ public class RobotContainer {
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
     KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
     photonVision.setDefaultCommand(updateTarget);
+          
       
-  
-  }
-
-  public Command getAutonomousCommand() {
+      }
+    
+      public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
 
