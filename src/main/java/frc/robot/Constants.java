@@ -46,8 +46,8 @@ public class Constants {
         public static final double ELEVATOR_MAX_VELOCITY = Meters.of(0.5).per(Second).in(MetersPerSecond);
         public static final double ELEVATOR_MAX_ACCELERATION = Meters.of(0.5).per(Second).per(Second).in(MetersPerSecondPerSecond);
         public static final double ARM_MAX_SPEED = 0.2;
-        public static final double ARM_MAX_ACCELERATION = Degrees.of(15).per(Second).per(Second).in(RPM.per(Second)) * ARM_REDUCTION;
-        public static final double ARM_MAX_VELOCITY = Degrees.of(30).per(Second).in(RPM) * ARM_REDUCTION;
+        public static final double ARM_MAX_ACCELERATION = Degrees.of(30).per(Second).per(Second).in(RPM.per(Second)) * ARM_REDUCTION;
+        public static final double ARM_MAX_VELOCITY = Degrees.of(60).per(Second).in(RPM) * ARM_REDUCTION;
 
         // TODO PID Constants
         public static final double ELEVATOR_KP = 10;
@@ -64,13 +64,13 @@ public class Constants {
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 0; //4.01;
-        public static final double ARM_KV = 0.2; //.39;
+        public static final double ARM_KV = 0.25; //.39;
         public static final double ARM_KA = 0; //.21;
-        public static final double ARM_KP = 0.1; //0.1;
+        public static final double ARM_KP = 0.6; //0.1;
         public static final double ARM_KS = 0;
         public static final double ARM_L3_DEGREE = 40.0;
         public static final double ARM_CORAL_INTAKE_DEGREE = 20.0;
-        public static final double ARM_SETPOINT_MULTIPLIER = -0.1;
+        public static final double ARM_SETPOINT_MULTIPLIER = -0.4;
 
         //Elevator Constants
         public static final double ELEVATOR_DRUM_RADIUS = 0.0222377; //pitch radius of that one gear on the elevator, yeah

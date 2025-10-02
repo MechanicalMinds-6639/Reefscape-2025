@@ -100,8 +100,8 @@ public class RobotContainer {
     }
 
     driveBase.setDefaultCommand(driveFieldOrientedAngularVelocity); //Change to switch the drive control style, make sure to set heading correction to true in SwerveSubsystem
-    //KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
-    KCCWrist.setDefaultCommand(KCCWrist.RunWrist(copilotController));
+    KCCWrist.setDefaultCommand(KCCWrist.GrabberConverterCommand(copilotController));
+    //KCCWrist.setDefaultCommand(KCCWrist.RunWrist(copilotController));
     //climber.setDefaultCommand(climber.climberDefaultCommand(driverController));
     //driverController.y().whileTrue(elevator.setElevatorHeight(.4)).onFalse(elevator.stop());
     elevator.setDefaultCommand(elevator.RunElevator(copilotController, driverController));
