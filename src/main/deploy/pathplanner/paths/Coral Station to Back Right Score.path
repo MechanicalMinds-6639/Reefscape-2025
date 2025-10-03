@@ -48,7 +48,7 @@
   "folder": "Side Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.63980919808662
+    "rotation": -52.03059975472428
   },
   "useDefaultConstraints": true
 }
