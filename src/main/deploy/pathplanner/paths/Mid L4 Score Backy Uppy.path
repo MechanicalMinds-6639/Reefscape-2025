@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.065625,
-        "y": 3.0228551136363633
+        "x": 12.065,
+        "y": 3.83
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.81898627462058,
-        "y": 2.5061804604838356
+        "x": 11.815,
+        "y": 3.83
       },
       "isLocked": false,
-      "linkedName": "Right Score Endpoint"
+      "linkedName": "Mid L4 Score Path Endpoint"
     },
     {
       "anchor": {
-        "x": 16.522926136363637,
-        "y": 1.1980539772727274
+        "x": 11.1,
+        "y": 3.845
       },
       "prevControl": {
-        "x": 16.82094843221747,
-        "y": 1.112048151571502
+        "x": 11.35,
+        "y": 3.845
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Coral Station Waypoint"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -52.03059975472428
+    "velocity": 0.0,
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Side Score",
+  "folder": "L3-L4 Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -123.00000000000001
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

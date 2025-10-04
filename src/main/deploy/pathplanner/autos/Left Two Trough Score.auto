@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Score"
+            "pathName": "Left Score"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Coral Station"
+            "pathName": "Left To Coral Station"
           }
         },
         {
@@ -49,7 +49,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Coral Station to Back Right Score"
+            "pathName": "Left Coral Station to Back Left Score"
           }
         },
         {

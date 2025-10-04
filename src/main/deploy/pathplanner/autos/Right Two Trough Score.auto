@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Lower Slowly"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "90 Degree Wrist Command"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Spit Command"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Intake Station"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right To Coral Station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Grabber Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Coral Station to Back Right Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Spit Command"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

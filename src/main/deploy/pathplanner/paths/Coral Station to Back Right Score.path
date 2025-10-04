@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 16.235141542980024,
-        "y": 1.9841096533093063
+        "x": 16.33346590909091,
+        "y": 1.4174289772727264
       },
       "isLocked": false,
       "linkedName": "Right Coral Station Waypoint"
@@ -20,8 +20,8 @@
         "y": 2.815467171717172
       },
       "prevControl": {
-        "x": 14.09996819849519,
-        "y": 2.381376847300918
+        "x": 14.239431818181817,
+        "y": 2.5841051136363635
       },
       "nextControl": null,
       "isLocked": false,

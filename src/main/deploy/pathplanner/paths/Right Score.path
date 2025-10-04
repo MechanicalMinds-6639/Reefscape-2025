@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 10.599801136363634,
-        "y": 0.8390767045454538
+        "y": 0.7792471590909088
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.403711392773893,
-        "y": 0.6120254224941731
+        "x": 10.809204545454545,
+        "y": 0.9986221590909088
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 3.0228551136363633
       },
       "prevControl": {
-        "x": 11.603701503557287,
-        "y": 2.0583866543092104
+        "x": 12.177428398874989,
+        "y": 3.2464619113863433
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Score Endpoint Waypoint"
+      "linkedName": "Right Score Endpoint"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "Side Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -130.0
+    "rotation": -135.0
   },
   "useDefaultConstraints": true
 }
