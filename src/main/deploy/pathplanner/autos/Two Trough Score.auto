@@ -35,12 +35,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "90 Degree Wrist Command"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Right to Coral Station"
@@ -56,18 +50,6 @@
           "type": "path",
           "data": {
             "pathName": "Coral Station to Back Right Score"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Arm Lower Slowly"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Spit Command"
           }
         },
         {
