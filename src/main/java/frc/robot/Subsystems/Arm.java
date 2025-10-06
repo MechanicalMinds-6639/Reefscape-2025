@@ -75,6 +75,8 @@ public class Arm extends SubsystemBase {
 
       return new WaitCommand(1).andThen(run (() -> {
 
+        //System.out.println(ArmDegreeSetPoint);
+
 
         if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
           //make if statement to go up if limit switch is pressed down and not allow down, 

@@ -76,7 +76,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Dumb Arm Command", arm.autoArmCommand(2.75)
       .withTimeout(3));
     NamedCommands.registerCommand("Auto Spit Command", KCCGrabber.Grab(-1)
-      .withTimeout(1).andThen(KCCGrabber.Grab(0).withTimeout(0.1)));
+      .withTimeout(.1).andThen(KCCGrabber.Grab(0).withTimeout(0.1)));
     NamedCommands.registerCommand("Arm Lower Slowly", arm.setSpeed(0.45)
       .withTimeout(1.5).andThen(arm.setSpeed(0).withTimeout(0.1)));
     NamedCommands.registerCommand("90 Degree Wrist Command", new ParallelRaceGroup(KCCWrist.setWristAngle(90), KCCGrabber.grabberAutoBackspinCommand()).withTimeout(1));
@@ -93,9 +93,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Elevator Command", elevator.autoPID(0.55)
       .withTimeout(2));
     NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_DEGREE)
-      .withTimeout(1.5)); 
+      .withTimeout(2)); 
     NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
       .withTimeout(2));
+    //NamedCommands.registerCommand("Arm Trough Angle", arm.autoPID(50)
+      //.withTimeout(.1));
     
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Test Vision Auto", new DriveToTargetCommand(photonVision, driveBase, 21));

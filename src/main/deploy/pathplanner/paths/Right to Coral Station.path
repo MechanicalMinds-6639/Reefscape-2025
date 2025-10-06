@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.065625,
-        "y": 3.0228551136363633
+        "x": 12.285,
+        "y": 3.0627414772727275
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.81898627462058,
-        "y": 2.5061804604838356
+        "x": 12.524318181818183,
+        "y": 2.3148721590909096
       },
       "isLocked": false,
       "linkedName": "Right Score Endpoint"
     },
     {
       "anchor": {
-        "x": 16.522926136363637,
-        "y": 1.1980539772727274
+        "x": 16.88190340909091,
+        "y": 1.33765625
       },
       "prevControl": {
-        "x": 16.82094843221747,
-        "y": 1.112048151571502
+        "x": 17.179925704944743,
+        "y": 1.2516504242987745
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -48,7 +48,7 @@
   "folder": "Side Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -123.00000000000001
+    "rotation": -135.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
