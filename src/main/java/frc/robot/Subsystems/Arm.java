@@ -214,6 +214,7 @@ public class Arm extends SubsystemBase {
 
   public void setZeroReferncePoint(){
     ArmEncoder.setPosition(0);
+    ArmDegreeSetPoint = 0;
   }
 
   @Override

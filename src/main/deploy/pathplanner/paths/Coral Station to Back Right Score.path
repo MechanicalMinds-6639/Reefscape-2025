@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 16.88190340909091,
-        "y": 1.33765625
+        "x": 16.842017045454543,
+        "y": 1.3276846590909088
       },
       "prevControl": null,
       "nextControl": {
-        "x": 16.692443181818184,
-        "y": 1.557031249999999
+        "x": 16.652556818181818,
+        "y": 1.5470596590909078
       },
       "isLocked": false,
       "linkedName": "Right Coral Station Waypoint"
