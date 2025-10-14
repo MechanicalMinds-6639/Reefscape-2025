@@ -81,13 +81,15 @@ public class Arm extends SubsystemBase {
         if (Math.abs(CraneController.getRightY()) > Operator.DEADBAND){
           //make if statement to go up if limit switch is pressed down and not allow down, 
           ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * Multiplier;
-        } else if (CraneController.x().getAsBoolean()){
-            ArmDegreeSetPoint = CraneConstants.ARM_L3_DEGREE;
         } else if (CraneController.a().getAsBoolean()){
-          ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_DEGREE;
-      }   else if (CraneController.y().getAsBoolean()){
-          ArmDegreeSetPoint = CraneConstants.ARM_L4_SCORING_ANGLE;
-      }
+            ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_ANGLE;
+        } else if (CraneController.b().getAsBoolean()){
+            ArmDegreeSetPoint = CraneConstants.ARM_TROUGH_SCORING_ANGLE;
+        } else if (CraneController.x().getAsBoolean()){
+            ArmDegreeSetPoint = CraneConstants.ARM_L3_SCORING_ANGLE;
+        } else if (CraneController.y().getAsBoolean()){
+            ArmDegreeSetPoint = CraneConstants.ARM_L4_SCORING_ANGLE;
+        } 
 
        if (CraneController.povUp().getAsBoolean()){
          Multiplier = CraneConstants.ARM_TURBO_SETPOINT_MULTIPLIER;

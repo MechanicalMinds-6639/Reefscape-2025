@@ -36,7 +36,7 @@ public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(Constants.Operator.DRIVER);
   private final CommandXboxController copilotController = new CommandXboxController(Constants.Operator.COPILOT);
-  private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+  private final SwerveSubsystem driveBase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"), driverController);
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final Wrist KCCWrist = new Wrist();
   private final Grabber KCCGrabber = new Grabber();
@@ -92,10 +92,10 @@ public class RobotContainer {
       .withTimeout(2));
     NamedCommands.registerCommand("L4 Elevator Command", elevator.autoPID(0.55)
       .withTimeout(2));
-    NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_DEGREE)
+    NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_ANGLE)
       .withTimeout(2)); 
     NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
-      .withTimeout(2));
+      .withTimeout(2).andThen(KCCGrabber.Grab(0).withTimeout(0.1)));
     NamedCommands.registerCommand("Arm Trough Angle", arm.autoPID(25)
         .withTimeout(0.1));
     
