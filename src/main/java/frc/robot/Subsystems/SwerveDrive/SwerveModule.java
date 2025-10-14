@@ -2,9 +2,11 @@ package frc.robot.Subsystems.SwerveDrive;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkAnalogSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -33,6 +35,7 @@ public class SwerveModule {
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turnEncoder = m_turnMotor.getAbsoluteEncoder();
+    SparkAnalogSensor m_turnEncoder = m_turnMotor.getAnalog();
 
     m_drivingController = m_driveMotor.getClosedLoopController();
     m_turningController = m_turnMotor.getClosedLoopController(); 
