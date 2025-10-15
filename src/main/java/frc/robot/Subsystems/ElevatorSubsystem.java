@@ -93,8 +93,6 @@ public class ElevatorSubsystem extends SubsystemBase {
           SetPointHeight = SetPointHeight - HeightController.getLeftY() * Multiplier;
         } else if (HeightController.a().getAsBoolean()){
             SetPointHeight = CraneConstants.ELEVATOR_CORAL_INTAKE_HEIGHT;
-        } else if (HeightController.b().getAsBoolean()){
-            SetPointHeight = CraneConstants.ELEVATOR_TROUGH_HEIGHT;
         } else if (HeightController.x().getAsBoolean()){
             SetPointHeight = CraneConstants.ELEVATOR_L3_HEIGHT;
         } else if (HeightController.y().getAsBoolean()){

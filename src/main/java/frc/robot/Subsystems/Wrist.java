@@ -116,8 +116,6 @@ public class Wrist extends SubsystemBase {
 
        if (HeightController.a().getAsBoolean()){
         SetPointAngle = GrabberConstants.WRIST_INTAKE_ANGLE;
-      } else if (HeightController.b().getAsBoolean()) {
-          SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
       } else if (HeightController.x().getAsBoolean()) {
           SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
       } else if (HeightController.y().getAsBoolean()) {

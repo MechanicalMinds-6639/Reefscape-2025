@@ -83,8 +83,6 @@ public class Arm extends SubsystemBase {
           ArmDegreeSetPoint = ArmDegreeSetPoint - CraneController.getRightY() * Multiplier;
         } else if (CraneController.a().getAsBoolean()){
             ArmDegreeSetPoint = CraneConstants.ARM_CORAL_INTAKE_ANGLE;
-        } else if (CraneController.b().getAsBoolean()){
-            ArmDegreeSetPoint = CraneConstants.ARM_TROUGH_INTAKE_ANGLE;
         } else if (CraneController.x().getAsBoolean()){
             ArmDegreeSetPoint = CraneConstants.ARM_L3_SCORING_ANGLE;
         } else if (CraneController.y().getAsBoolean()){
