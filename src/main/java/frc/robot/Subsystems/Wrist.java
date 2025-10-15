@@ -48,7 +48,7 @@ public class Wrist extends SubsystemBase {
     GrabberTwistMax.configure(cfg, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public void setZeroReferncePoint(){
+  public void setZeroReferencePoint(){
       WristEncoder.setPosition(0);
   }
 
@@ -68,7 +68,7 @@ public class Wrist extends SubsystemBase {
 
     return run(() -> {
       if (CraneController.start().getAsBoolean()){
-        setZeroReferncePoint();
+        setZeroReferencePoint();
       }
       
       //double TwistSpeed = CraneController.getRightX();
@@ -116,14 +116,16 @@ public class Wrist extends SubsystemBase {
 
        if (HeightController.a().getAsBoolean()){
         SetPointAngle = GrabberConstants.WRIST_INTAKE_ANGLE;
+      } else if (HeightController.b().getAsBoolean()) {
+          SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
       } else if (HeightController.x().getAsBoolean()) {
-        SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
+          SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
       } else if (HeightController.y().getAsBoolean()) {
-        SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
+          SetPointAngle = GrabberConstants.WRIST_SCORING_ANGLE;
       } else if (HeightController.getLeftTriggerAxis() > Operator.DEADBAND){
-        SetPointAngle = SetPointAngle - HeightController.getLeftTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
+          SetPointAngle = SetPointAngle - HeightController.getLeftTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
       } else if (HeightController.getRightTriggerAxis() > Operator.DEADBAND){
-        SetPointAngle = SetPointAngle + HeightController.getRightTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
+          SetPointAngle = SetPointAngle + HeightController.getRightTriggerAxis() * GrabberConstants.WRIST_SETPOINT_MULTIPLIER;
       }
 
       GrabberTwistController.setReference(Degrees.of(SetPointAngle).in(Rotations)*10, ControlType.kPosition);

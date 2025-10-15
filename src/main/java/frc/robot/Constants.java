@@ -59,10 +59,12 @@ public class Constants {
         public static final double ELEVATOR_KS = 0;
         public static final double ELEVATOR_SETPOINT_MULTIPLIER = 0.005;
         public static final double ELEVATOR_TURBO_SETPOINT_MULTIPLIER = 0.01;
-        public static final double ELEVATOR_MAX_HEIGHT = 0.56;
+        public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.01;
+        public static final double ELEVATOR_TROUGH_HEIGHT = 0.01;
         public static final double ELEVATOR_L3_HEIGHT = 0.315;
         public static final double ELEVATOR_L4_HEIGHT = 0.555;
-        public static final double ELEVATOR_CORAL_INTAKE_HEIGHT = 0.01;
+        public static final double ELEVATOR_MAX_HEIGHT = 0.56;
+
         public static final double ARM_KI = 0;
         public static final double ARM_KD = 0;
         public static final double ARM_KG = 0; //4.01;
@@ -70,17 +72,18 @@ public class Constants {
         public static final double ARM_KA = 0; //.21;
         public static final double ARM_KP = 0.6;
         public static final double ARM_KS = 0;
-        public static final double ARM_L3_DEGREE = 32.0;
-        public static final double ARM_CORAL_INTAKE_DEGREE = 22.0;
         public static final double ARM_SETPOINT_MULTIPLIER = -0.55;
         public static final double ARM_TURBO_SETPOINT_MULTIPLIER = -0.85;
+        public static final double ARM_CORAL_INTAKE_ANGLE = 22.0;
+        public static final double ARM_TROUGH_INTAKE_ANGLE = 50;
+        public static final double ARM_L3_SCORING_ANGLE = 32.0;
         public static final double ARM_L4_SCORING_ANGLE = 15;
 
-        //Elevator Constants
+        //  Elevator Constants
         public static final double ELEVATOR_DRUM_RADIUS = 0.0222377; //pitch radius of that one gear on the elevator, yeah
         public static final double ELEVATOR_RAMP_RATE = 0.1; //Something else 
         public static final double ELEVATOR_GEARING = 9;
-        public static final double ELEVATOR_DEFAULT_TOLERANCE =  Inches.of(1).in(Meters);
+        public static final double ELEVATOR_DEFAULT_TOLERANCE = Inches.of(1).in(Meters);
 
 
 

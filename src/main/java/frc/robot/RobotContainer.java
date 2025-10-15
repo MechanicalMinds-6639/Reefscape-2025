@@ -92,7 +92,7 @@ public class RobotContainer {
       .withTimeout(2));
     NamedCommands.registerCommand("L4 Elevator Command", elevator.autoPID(0.55)
       .withTimeout(2));
-    NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_DEGREE)
+    NamedCommands.registerCommand("Arm Intake Station", arm.autoPID(CraneConstants.ARM_CORAL_INTAKE_ANGLE)
       .withTimeout(2)); 
     NamedCommands.registerCommand("Grabber Intake", KCCGrabber.Grab(1)
       .withTimeout(2));
@@ -131,7 +131,7 @@ public class RobotContainer {
     arm.setDefaultCommand(arm.RunArm(copilotController));
     driverController.a().whileTrue(driveBase.centerModulesCommand());
     driverController.y().onTrue(Commands.runOnce(driveBase::zeroGyro));
-    copilotController.start().onTrue(Commands.runOnce(KCCWrist::setZeroReferncePoint));
+    copilotController.start().onTrue(Commands.runOnce(KCCWrist::setZeroReferencePoint));
     //copilotController.leftBumper().whileTrue(KCCGrabber.Grab(1)).onFalse(KCCGrabber.Grab(0));
     //copilotController.rightBumper().whileTrue(KCCGrabber.Grab(-1)).onFalse(KCCGrabber.Grab(0));
     KCCGrabber.setDefaultCommand(KCCGrabber.grabberDefaultCommand(copilotController));
@@ -149,11 +149,11 @@ public class RobotContainer {
   }
 
   public void resetWrist() {
-    KCCWrist.setZeroReferncePoint();
+    KCCWrist.setZeroReferencePoint();
   }
 
   public void resetArm() {
-    arm.setZeroReferncePoint();
+    arm.setZeroReferencePoint();
   }
 
   public void resetElevator() {
