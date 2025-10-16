@@ -44,6 +44,7 @@ public class RobotContainer {
   private final Climber climber = new Climber();
   private final VisionSubsystem photonVision = new VisionSubsystem();
   private final DriveToTargetCommand driveToTarget = new DriveToTargetCommand(photonVision, driveBase, 0);
+  boolean isCompetition = true;
   
 
   private final SendableChooser<Command> autoChooser;
@@ -99,8 +100,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("Arm Trough Angle", arm.autoPID(25)
         .withTimeout(0.1));
     
-    autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.addOption("Test Vision Auto", new DriveToTargetCommand(photonVision, driveBase, 21));
+    autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+      (stream) -> isCompetition
+        ? stream.filter(auto -> auto.getName().startsWith("Comp"))
+        : stream
+    );
+    //autoChooser.addOption("Test Vision Auto", new DriveToTargetCommand(photonVision, driveBase, 21));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
     

@@ -33,7 +33,7 @@ import frc.robot.RobotContainer;
 
 public class VisionSubsystem extends SubsystemBase {
 
-    PhotonCamera camera = new PhotonCamera("VisionCamera");
+    PhotonCamera camera = new PhotonCamera("Frog");
     PhotonTrackedTarget target = new PhotonTrackedTarget();
     Rotation3d pRotation3d = new Rotation3d();
     Transform3d pCameraToRobot = new Transform3d(-0.216, -0.220, 0.505, pRotation3d);
@@ -73,6 +73,14 @@ public class VisionSubsystem extends SubsystemBase {
         List<PhotonPipelineResult> results = camera.getAllUnreadResults();
         if (results.size() > 0) {
             camResult = results.get(results.size() - 1);
+        }
+
+        PhotonPipelineResult result = camera.getLatestResult();
+
+        // Check if the pipeline has any targets.
+        if (result.hasTargets()) {
+          // Get the best target.
+          PhotonTrackedTarget bestTarget = result.getBestTarget();
         }
     }
 

@@ -27,7 +27,7 @@ public class Grabber extends SubsystemBase {
     } else if (direction == -1) {
       GrabberMax.set(-GrabberConstants.GRABBER_SPEED);
     } else {
-      System.out.println("YAY");
+      //System.out.println("YAY");
       GrabberMax.set(0);
     }
   
