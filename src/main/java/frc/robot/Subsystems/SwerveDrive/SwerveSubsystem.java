@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -63,10 +64,10 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() { //The dashboard numbers should no longer be needed
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Front left encoder", swerveDrive.getModules()[0].getAbsolutePosition());
-    // SmartDashboard.putNumber("Front right encoder", swerveDrive.getModules()[1].getAbsolutePosition());
-    // SmartDashboard.putNumber("Back left encoder", swerveDrive.getModules()[2].getAbsolutePosition());
-    // SmartDashboard.putNumber("Back right encoder", swerveDrive.getModules()[3].getAbsolutePosition());
+    SmartDashboard.putNumber("Front left encoder", swerveDrive.getModules()[0].getAbsolutePosition());
+    SmartDashboard.putNumber("Front right encoder", swerveDrive.getModules()[1].getAbsolutePosition());
+    SmartDashboard.putNumber("Back left encoder", swerveDrive.getModules()[2].getAbsolutePosition());
+    SmartDashboard.putNumber("Back right encoder", swerveDrive.getModules()[3].getAbsolutePosition());
   }
 
   public void setupPathPlanner() {
